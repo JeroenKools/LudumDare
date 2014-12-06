@@ -11,6 +11,7 @@ public class generatePins : MonoBehaviour
     private GameObject pinHolder;
     private Transform[,] pins;
     private bool done = false;
+    private float dist, gapWidth, pinWidth;
     
     void Start ()
     {
@@ -23,15 +24,17 @@ public class generatePins : MonoBehaviour
         }
         pinHolder = new GameObject ("Pins");
         pinHolder.transform.parent = transform;
+
     }
 	
     
     void Update ()
     {
         if (!done) {
-            float dist = 1.0f / pinsPerTile;
-            float gapWidth = dist * gapRatio;
-            float pinWidth = dist - gapWidth;
+            dist = 1.0f / pinsPerTile;
+            gapWidth = dist * gapRatio;
+            pinWidth = dist - gapWidth;
+
             Vector3 pos = transform.position;
 		
             for (int x=0; x<pinsPerTile; x++) {
@@ -49,4 +52,15 @@ public class generatePins : MonoBehaviour
             done = true;
         }
     }
+
+    public float getPinWidth ()
+    {
+        return pinWidth;
+    }
+
+    public float getGapWidth ()
+    {
+        return gapWidth;
+    }   
 }
+

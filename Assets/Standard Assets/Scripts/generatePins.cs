@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 [ExecuteInEditMode()]
@@ -10,7 +10,6 @@ public class generatePins : MonoBehaviour
 
     private GameObject pinHolder;
     private Transform[,] pins;
-    private bool done = false;
     private float dist, gapWidth, pinWidth;
     
     void Start ()
@@ -24,33 +23,35 @@ public class generatePins : MonoBehaviour
         }
         pinHolder = new GameObject ("Pins");
         pinHolder.transform.parent = transform;
+        Build ();
+    }
 
+    void Build ()
+    {
+        dist = 1.0f / pinsPerTile;
+        gapWidth = dist * gapRatio;
+        pinWidth = dist - gapWidth;
+        
+        Vector3 pos = transform.position;
+        
+        for (int x=0; x<pinsPerTile; x++) {
+            for (int z=0; z<pinsPerTile; z++) {
+                Transform pin = (Transform)Instantiate (pinPrefab, 
+                                                        new Vector3 (pos.x + x * dist, pos.y, pos.z + dist * z),
+                                                        transform.rotation);
+                pin.localScale = new Vector3 (pinWidth, 3 * pinWidth, pinWidth);
+                
+                pin.name = "Pin " + x + ";" + z;
+                pin.parent = pinHolder.transform;
+                pins [x, z] = pin;
+            }
+        }
     }
 	
     
     void Update ()
     {
-        if (!done) {
-            dist = 1.0f / pinsPerTile;
-            gapWidth = dist * gapRatio;
-            pinWidth = dist - gapWidth;
 
-            Vector3 pos = transform.position;
-		
-            for (int x=0; x<pinsPerTile; x++) {
-                for (int z=0; z<pinsPerTile; z++) {
-                    Transform pin = (Transform)Instantiate (pinPrefab, 
-                                        new Vector3 (pos.x + x * dist, pos.y, pos.z + dist * z),
-                                        transform.rotation);
-                    pin.localScale = new Vector3 (pinWidth, pinWidth, pinWidth);
-										
-                    pin.name = "Pin " + x + ";" + z;
-                    pin.parent = pinHolder.transform;
-                    pins [x, z] = pin;
-                }
-            }
-            done = true;
-        }
     }
 
     public float getPinWidth ()
@@ -62,5 +63,7 @@ public class generatePins : MonoBehaviour
     {
         return gapWidth;
     }   
+
+
 }
 

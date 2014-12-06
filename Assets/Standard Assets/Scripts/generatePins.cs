@@ -33,10 +33,6 @@ public class generatePins : MonoBehaviour
         pinWidth = dist - gapWidth;
         
         Vector3 pos = transform.position;
-        
-        print (TerrainManager.instance);
-        print (TerrainManager.instance.slopeX);
-        print (TerrainManager.instance.slopeZ);
 
         for (int x=0; x<pinsPerTile; x++) {
             for (int z=0; z<pinsPerTile; z++) {

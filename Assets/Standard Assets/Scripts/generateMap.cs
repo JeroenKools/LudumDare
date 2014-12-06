@@ -178,9 +178,6 @@ public class generateMap : MonoBehaviour
 
                     float dY = Gaussian.GaussNorm (0, bumpWidth / 3.0f, j) * Gaussian.GaussNorm (0, bumpWidth / 3.0f, k) * bumpHeight;
                     dY += Random.value * bumpUniformNoise;
-                    if (true) {//}(dY == float.NaN) {
-                        print ("Tile " + x + ";" + z + "pin " + j + ";" + k + ", dy: " + dY);
-                    }
                     GameObject p = landTiles [x, z].GetComponent<generatePins> ().getPin (pinX + offsetX + j, pinZ + offsetZ + k);
                     //p.transform.localScale = p.transform.localScale + Vector3.up * dY;
                     p.transform.position = p.transform.position + Vector3.up * dY;

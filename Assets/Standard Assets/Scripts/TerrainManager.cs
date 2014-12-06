@@ -28,10 +28,8 @@ public class TerrainManager : MonoBehaviour
             DontDestroyOnLoad (this);
             
         } else if (this != _instance) {
-            //If a Singleton already exists and you find
-            //another reference in scene, destroy it!
+            //If a Singleton already exists and you find another reference in scene, destroy it!
             Destroy (this.gameObject);
-            //print ("Destroyed " + this + ", as " + _instance + " is already the singleton.");
         }
     }
 	

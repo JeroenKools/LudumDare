@@ -12,6 +12,11 @@ public class Gaussian : MonoBehaviour
         return 1.0f / (sigma * sqrt2Pi) * Mathf.Exp (-0.5f * Mathf.Pow ((x - mean) / sigma, 2f));
     }
 
+    public static float GaussNorm (float mean, float sigma, float x)
+    // Normalized to have a peak value of 1
+    {
+        return Gauss (mean, sigma, x) / Gauss (mean, sigma, mean);
+    }
 
     public static float Rand (float  mean, float  sigma, float min, float max)
     {   

@@ -5,22 +5,22 @@ using System.Collections;
 public class generatePins : MonoBehaviour
 {
     public int pinsPerTile;    
-    public Transform pinPrefab;
+    public GameObject pinPrefab;
     public float gapRatio;
+    public float slopeX, slopeZ;
 
     private GameObject pinHolder;
-    private Transform[,] pins;
+    private GameObject[,] pins;
     private float dist, gapWidth, pinWidth;
     
-    void Start ()
+    void Awake ()
     {
-        pins = new Transform[pinsPerTile, pinsPerTile]; 
-
         // Delete existing pins
         Transform pinT = transform.FindChild ("Pins");
         if (pinT != null) {
             DestroyImmediate (pinT.gameObject);
         }
+        pins = new GameObject[pinsPerTile, pinsPerTile]; 
         pinHolder = new GameObject ("Pins");
         pinHolder.transform.parent = transform;
         Build ();
@@ -34,24 +34,24 @@ public class generatePins : MonoBehaviour
         
         Vector3 pos = transform.position;
         
+        print (TerrainManager.instance);
+        print (TerrainManager.instance.slopeX);
+        print (TerrainManager.instance.slopeZ);
+
         for (int x=0; x<pinsPerTile; x++) {
             for (int z=0; z<pinsPerTile; z++) {
-                Transform pin = (Transform)Instantiate (pinPrefab, 
-                                                        new Vector3 (pos.x + x * dist, pos.y, pos.z + dist * z),
-                                                        transform.rotation);
-                pin.localScale = new Vector3 (pinWidth, 3 * pinWidth, pinWidth);
+                GameObject pin = (GameObject)Instantiate (pinPrefab, 
+                                                          new Vector3 (pos.x + x * dist + TerrainManager.instance.slopeX * x / pinsPerTile, 
+                                                                        pos.y, 
+                                                                        pos.z + dist * z + TerrainManager.instance.slopeZ * z / pinsPerTile),
+                                                          transform.rotation);
+                pin.transform.localScale = new Vector3 (pinWidth, 3 * pinWidth, pinWidth);
                 
                 pin.name = "Pin " + x + ";" + z;
-                pin.parent = pinHolder.transform;
+                pin.transform.parent = pinHolder.transform;
                 pins [x, z] = pin;
             }
         }
-    }
-	
-    
-    void Update ()
-    {
-
     }
 
     public float getPinWidth ()
@@ -63,6 +63,11 @@ public class generatePins : MonoBehaviour
     {
         return gapWidth;
     }   
+
+    public GameObject getPin (int x, int z)
+    {           
+        return pins [x, z];
+    }
 
 
 }

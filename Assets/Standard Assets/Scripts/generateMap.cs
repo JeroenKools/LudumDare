@@ -9,7 +9,9 @@ public class generateMap : MonoBehaviour
     public float waterRatio;
     public Transform tilePrefab, waterTilePrefab;
     public float slopeX, slopeZ;
-
+    public Rect drawBound;
+    
+    private int _mapSize;
     private Transform[,] waterTiles, landTiles;
     private GameObject waterTileHolder, landTileHolder;
     private bool done = false;
@@ -17,10 +19,15 @@ public class generateMap : MonoBehaviour
 
     void Start ()
     {
+        if (Application.isEditor) {
+            _mapSize = 15;
+        } else {
+            _mapSize = mapSize;
+        }
 
-        waterTiles = new Transform[mapSize, mapSize];
-        landTiles = new Transform[mapSize, mapSize];
-        seafloorY = -(slopeZ + slopeX) * waterRatio * mapSize;
+        waterTiles = new Transform[_mapSize, _mapSize];
+        landTiles = new Transform[_mapSize, _mapSize];
+        seafloorY = -(slopeZ + slopeX) * waterRatio * _mapSize;
 
         // Delete existing water tiles
         Transform waterTilesT = transform.FindChild ("Water");
@@ -35,8 +42,11 @@ public class generateMap : MonoBehaviour
         if (landTilesT != null) {
             DestroyImmediate (landTilesT.gameObject);
         }
+
         landTileHolder = new GameObject ("Land");
         landTileHolder.transform.parent = transform;
+
+        Camera.main.transform.position = new Vector3 (-_mapSize / 2, _mapSize * 0.8f, -_mapSize / 2);
 
     }
 	
@@ -45,35 +55,38 @@ public class generateMap : MonoBehaviour
     {
         if (!done) {                        
             
-            float landLimit = mapSize * waterRatio;
+            float landLimit = _mapSize * waterRatio;
+            Vector3 location, screenPos;
 
-            for (int x=0; x<mapSize; x++) {
-                for (int z=0; z<mapSize; z++) {
+            for (int x=0; x<_mapSize; x++) {
+                for (int z=0; z<_mapSize; z++) {
 
                     // Create land
-                    Transform tile = (Transform)Instantiate (tilePrefab, 
-                                                        new Vector3 (x, seafloorY + slopeX * x + slopeZ * z, z),
-                                                        transform.rotation);
+                    location = new Vector3 (x, seafloorY + slopeX * x + slopeZ * z, z);
+                    screenPos = Camera.main.WorldToViewportPoint (location);
+                    // Only actually instantiate the tile if it would be on screen. This is in order to clip the points off of the diamond map.
+                    if (drawBound.Contains (screenPos)) {
+                        Transform tile = (Transform)Instantiate (tilePrefab, location, transform.rotation);
                 
-                    tile.name = "Land tile " + x + ";" + z;
-                    tile.parent = landTileHolder.transform;
-                    landTiles [x, z] = tile;
+                        tile.name = "Land tile " + x + ";" + z;
+                        tile.parent = landTileHolder.transform;
+                        landTiles [x, z] = tile;
+                    }
                     
                     // Create water
                     if (z < landLimit + 2) {
-                        tile = (Transform)Instantiate (waterTilePrefab, 
-                                                                 new Vector3 (x, 0, z),
-                                                                 transform.rotation);
+                        location = new Vector3 (x, 0, z);
+                        screenPos = Camera.main.WorldToViewportPoint (location);
+                        if (drawBound.Contains (screenPos)) {
+                            Transform tile = (Transform)Instantiate (waterTilePrefab, location, transform.rotation);
                         
-                        tile.name = "Water tile " + x + ";" + z;
-                        tile.parent = waterTileHolder.transform;
-                        waterTiles [x, z] = tile;
-
+                            tile.name = "Water tile " + x + ";" + z;
+                            tile.parent = waterTileHolder.transform;
+                            waterTiles [x, z] = tile;
+                        }
                     }
                 }
-            }
-
-            transform.position = Camera.main.ViewportToWorldPoint (new Vector3 (0.5f, 0.5f, mapSize * 2)); //transform.position;
+            }            
 
             done = true;
         }

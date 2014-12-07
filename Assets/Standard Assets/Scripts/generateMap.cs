@@ -14,6 +14,10 @@ public class generateMap : MonoBehaviour
     public float minDuneWidth;
     public float maxDuneWidth;
     public float duneUniformNoise;
+    public float minWaveHeight;
+    public float maxWaveHeight;
+    public float waveXLength;   // wavelength in pins    
+    public float waveZLength;   // space between successive waves
     
     private int _mapSize;
     private GameObject[,] waterTiles, landTiles;
@@ -21,19 +25,21 @@ public class generateMap : MonoBehaviour
     private float seafloorY;
     private int pinsPerTile = 0;
     private int nDunes;
+    private int mapPins;
 
     void Start ()
     {
         if (Application.isPlaying) {
             _mapSize = mapSize;
         } else {
-            _mapSize = 4;
+            _mapSize = 5;
         }
 
         nDunes = Mathf.RoundToInt (dunesPerTile * _mapSize * _mapSize);
         waterTiles = new GameObject[_mapSize, _mapSize];
         landTiles = new GameObject[_mapSize, _mapSize];
         seafloorY = -(GameManager.instance.slopeZ + GameManager.instance.slopeX) * waterRatio * _mapSize;
+        
 
         // Delete existing water tiles
         Transform waterTilesT = transform.FindChild ("Water");
@@ -108,12 +114,12 @@ public class generateMap : MonoBehaviour
                 }
             }
         } 
+        mapPins = _mapSize * pinsPerTile;
     }
 
     void AddDunes ()
     // Add little dunes and dips and holes to the beach
-    {
-        int mapPins = _mapSize * pinsPerTile;
+    {        
         float ZDirection = 0.15f + 0.35f * Random.value;
         if (Random.value > 0.5f) {
             ZDirection *= -1;
@@ -174,7 +180,7 @@ public class generateMap : MonoBehaviour
                 
                 GameObject p = getGlobalPin (pinX + j, pinZ + k, landTiles);
                 if (p != null) {
-                    dY *= 0.5f + Mathf.Clamp (p.transform.position.y, 0, 0.5f); // lower dunes near the water
+                    dY *= 0.333f + Mathf.Clamp (p.transform.position.y, 0, 067f); // lower dunes near the water
                     p.transform.position = p.transform.position + Vector3.up * dY;
                 }
             }
@@ -183,9 +189,32 @@ public class generateMap : MonoBehaviour
     
     
     void MakeWaves ()
-        // Initialize a wave near the edge of the map
+        // Initialize the sea with small, standard waves
     {
-    
+
+        float twoPi = Mathf.PI * 2;
+        float offsetX = twoPi * Random.value;
+        float offsetZ = twoPi * Random.value;
+        
+        for (int z=0; z<mapPins; z++) {
+            bool exists = true;
+            for (int x=0; x<mapPins; x++) {
+                GameObject pin = getGlobalPin (x, z, waterTiles);
+                if (pin == null) {
+                    exists = false;
+                    break;
+                }
+
+                float wx = Mathf.Sin ((0.5f * x + z) / waveXLength * twoPi + offsetX);
+                float wz = Mathf.Cos (z / waveZLength * twoPi + offsetZ);
+                float y = (wx + wz) * minWaveHeight;
+                pin.transform.position = pin.transform.position + Vector3.up * y;
+            }
+
+            if (!exists) {
+                break;
+            }
+        }
     }
 
     void PropagateWaves ()

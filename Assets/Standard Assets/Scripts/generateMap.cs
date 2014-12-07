@@ -9,7 +9,7 @@ public class generateMap : MonoBehaviour
     public float waterRatio;
     public GameObject tilePrefab, waterTilePrefab;
     public Rect drawBound;
-    public float nDunes;
+    public float dunesPerTile;
     public float maxDuneHeight;
     public float minDuneWidth;
     public float maxDuneWidth;
@@ -20,15 +20,17 @@ public class generateMap : MonoBehaviour
     private GameObject waterTileHolder, landTileHolder;
     private float seafloorY;
     private int pinsPerTile = 0;
+    private int nDunes;
 
     void Start ()
     {
         if (Application.isPlaying) {
             _mapSize = mapSize;
         } else {
-            _mapSize = 6;
+            _mapSize = 4;
         }
 
+        nDunes = Mathf.RoundToInt (dunesPerTile * _mapSize * _mapSize);
         waterTiles = new GameObject[_mapSize, _mapSize];
         landTiles = new GameObject[_mapSize, _mapSize];
         seafloorY = -(GameManager.instance.slopeZ + GameManager.instance.slopeX) * waterRatio * _mapSize;
@@ -48,10 +50,12 @@ public class generateMap : MonoBehaviour
         }
 
         landTileHolder = new GameObject ("Land");
-        landTileHolder.transform.parent = transform;
+        landTileHolder.transform.parent = transform;        
 
-        Camera.main.transform.position = new Vector3 (-_mapSize / 2, _mapSize * 1.75f, -_mapSize / 2);
+        Camera.main.transform.position = new Vector3 (-_mapSize / 2f, Mathf.Sqrt (2 * _mapSize * _mapSize), -_mapSize / 2f);
+        Camera.main.orthographicSize = _mapSize * 0.4f;        
         Build ();
+
     }
 
     void Build ()
@@ -129,10 +133,8 @@ public class generateMap : MonoBehaviour
             GameObject pin = getGlobalPin (pinX, pinZ, landTiles);
             
             // Determine dune's location and dimensions
-            int startX = pinX;
             int startZ = pinZ;            
-            float duneWidth = Gaussian.Rand ((maxDuneWidth - minDuneWidth) / 2, (maxDuneWidth - minDuneWidth) / 6, minDuneWidth, maxDuneWidth);
-            int b = Mathf.CeilToInt (duneWidth);
+            float duneWidth = Gaussian.Rand ((maxDuneWidth - minDuneWidth) / 2, (maxDuneWidth - minDuneWidth) / 6, minDuneWidth, maxDuneWidth);            
 
             // Prevent height from being too close to zero because zero sigma gives funny Gaussians
             float duneHeight = 0;
@@ -140,26 +142,10 @@ public class generateMap : MonoBehaviour
                 duneHeight = Gaussian.Rand (0, maxDuneHeight / 3, 0, maxDuneHeight);
             }
 
-            print (string.Format ("Building dune starting from {0};{1}. Height {2:F3}, width {3:F3}, length {4}, direction {5}", 
-                startX, startZ, duneHeight, duneWidth, duneLength, ZDirection));
-
             // for every tile along the ridge
             for (int i=0; i<duneLength; i++) {
 
-                // Add a gaussian bump with some uniform noise
-                
-                for (int j=-b; j<=b; j++) {
-                    for (int k=-b; k<=b; k++) {
-
-                        float dY = Gaussian.GaussNorm (0, duneWidth / 3.0f, j) * Gaussian.GaussNorm (0, duneWidth / 3.0f, k) * duneHeight;
-                        dY += Random.value * duneUniformNoise;
-
-                        GameObject p = getGlobalPin (pinX + j, pinZ + k, landTiles);
-                        if (p != null) {
-                            p.transform.position = p.transform.position + Vector3.up * dY;
-                        }
-                    }
-                }
+                PlacePile (pinX, pinZ, duneHeight, duneWidth, duneUniformNoise, landTiles);
 
                 pinX++;
                 pinZ = Mathf.RoundToInt (startZ + (i + 1) * ZDirection);
@@ -173,8 +159,31 @@ public class generateMap : MonoBehaviour
         }
     }
 
+
+    void PlacePile (int pinX, int pinZ, float height, float width, float noise, GameObject[,] tiles)
+    {
+        // Add a gaussian bump with some uniform noise
+
+        int b = Mathf.CeilToInt (width);
+        
+        for (int j=-b; j<=b; j++) {
+            for (int k=-b; k<=b; k++) {
+                
+                float dY = Gaussian.GaussNorm (0, width / 3.0f, j) * Gaussian.GaussNorm (0, width / 3.0f, k) * height;                        
+                dY += Random.value * duneUniformNoise;                        
+                
+                GameObject p = getGlobalPin (pinX + j, pinZ + k, landTiles);
+                if (p != null) {
+                    dY *= 0.5f + Mathf.Clamp (p.transform.position.y, 0, 0.5f); // lower dunes near the water
+                    p.transform.position = p.transform.position + Vector3.up * dY;
+                }
+            }
+        }
+    }
+    
+    
     void MakeWaves ()
-    // Initialize a wave near the edge of the map
+        // Initialize a wave near the edge of the map
     {
     
     }
@@ -197,14 +206,15 @@ public class generateMap : MonoBehaviour
         if ((tileX < 0) || (tileX >= _mapSize) || (tileZ < 0) || (tileZ >= _mapSize)) {
             //print (string.Format ("Pin {0};{1} ({2}.{3};{4}.{5}) is off the map!", x, z, tileX, pinX, tileZ, pinZ));
             return null;
-        } else {
-            //print (string.Format ("Pin {0};{1} ({2}.{3};{4}.{5}) should be on the map!", x, z, tileX, pinX, tileZ, pinZ));
+        } 
+
+        if (from [tileX, tileZ] == null) {
+            return null;
         }
 
         generatePins p = from [tileX, tileZ].GetComponent<generatePins> ();
 
         if (p == null) {
-            //print (string.Format ("Pin {0};{1} ({2}.{3};{4}.{5}) is null!", x, z, tileX, pinX, tileZ, pinZ));
             return null;
         } else {
             if (pinX < 0 || pinX >= pinsPerTile || pinZ < 0 || pinZ >= pinsPerTile) {

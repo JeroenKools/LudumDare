@@ -156,13 +156,10 @@ public class generateMap : MonoBehaviour
 
                         GameObject p = getGlobalPin (pinX + j, pinZ + k, landTiles);
                         if (p != null) {
-                            //p.transform.localScale = p.transform.localScale + Vector3.up * dY;
                             p.transform.position = p.transform.position + Vector3.up * dY;
                         }
                     }
                 }
-
-                //duneHeight = 0.1;
 
                 pinX++;
                 pinZ = Mathf.RoundToInt (startZ + (i + 1) * ZDirection);

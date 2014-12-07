@@ -37,8 +37,8 @@ public class generatePins : MonoBehaviour
         for (int x=0; x<pinsPerTile; x++) {
             for (int z=0; z<pinsPerTile; z++) {
 
-                float slope = pinPrefab.name == "WaterPin" ? 0 : TerrainManager.instance.slopeX / pinsPerTile * (float)x + 
-                    TerrainManager.instance.slopeZ / pinsPerTile * (float)z;
+                float slope = pinPrefab.name == "WaterPin" ? 0 : GameManager.instance.slopeX / pinsPerTile * (float)x + 
+                    GameManager.instance.slopeZ / pinsPerTile * (float)z;
 
                 GameObject pin = (GameObject)Instantiate (pinPrefab, 
                                     new Vector3 (pos.x + x * dist, pos.y + slope, pos.z + dist * z), 

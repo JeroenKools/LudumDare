@@ -11,6 +11,7 @@ public class generateMap : MonoBehaviour
     public Rect drawBound;
     public float nBumps; // number of bumps as a fraction of the number of tiles
     public float maxBumpHeight;
+    public float minBumpWidth;
     public float maxBumpWidth;
     public float bumpUniformNoise;
     
@@ -30,7 +31,7 @@ public class generateMap : MonoBehaviour
 
         waterTiles = new GameObject[_mapSize, _mapSize];
         landTiles = new GameObject[_mapSize, _mapSize];
-        seafloorY = -(TerrainManager.instance.slopeZ + TerrainManager.instance.slopeX) * waterRatio * _mapSize;
+        seafloorY = -(GameManager.instance.slopeZ + GameManager.instance.slopeX) * waterRatio * _mapSize;
 
         // Delete existing water tiles
         Transform waterTilesT = transform.FindChild ("Water");
@@ -49,7 +50,7 @@ public class generateMap : MonoBehaviour
         landTileHolder = new GameObject ("Land");
         landTileHolder.transform.parent = transform;
 
-        Camera.main.transform.position = new Vector3 (-_mapSize / 2, _mapSize * 0.8f, -_mapSize / 2);
+        Camera.main.transform.position = new Vector3 (-_mapSize / 2, _mapSize * 1.75f, -_mapSize / 2);
         Build ();
     }
 
@@ -78,7 +79,7 @@ public class generateMap : MonoBehaviour
             for (int z=0; z<_mapSize; z++) {
                 
                 // Create land
-                location = new Vector3 (x, seafloorY + TerrainManager.instance.slopeX * x + TerrainManager.instance.slopeZ * z, z);
+                location = new Vector3 (x, seafloorY + GameManager.instance.slopeX * x + GameManager.instance.slopeZ * z, z);
                 screenPos = Camera.main.WorldToViewportPoint (location);
                 // Only actually instantiate the tile if it would be on screen. This is in order to clip the points off of the diamond map.
                 if (drawBound.Contains (screenPos)) {
@@ -129,7 +130,8 @@ public class generateMap : MonoBehaviour
             int pinX, pinZ;
             pinX = Random.Range (0, tile.GetComponent<generatePins> ().pinsPerTile - 1);
             pinZ = Random.Range (0, tile.GetComponent<generatePins> ().pinsPerTile - 1);
-            int bumpWidth = 1 + Mathf.FloorToInt (Gaussian.Rand (maxBumpWidth / 2, maxBumpWidth / 3, 0, maxBumpWidth));
+            float bumpWidth = Gaussian.Rand ((maxBumpWidth - minBumpWidth) / 2, (maxBumpWidth - minBumpWidth) / 6, minBumpWidth, maxBumpWidth);
+            print (bumpWidth);
 
             // Prevent from being too close to zero
             float bumpHeight = 0;
@@ -140,8 +142,9 @@ public class generateMap : MonoBehaviour
             //print ("Bump w/h " + bumpWidth + "," + bumpHeight);
 
             // Add a gaussian bump with some uniform noise
-            for (int j=-bumpWidth; j<=bumpWidth; j++) {
-                for (int k=-bumpWidth; k<=bumpWidth; k++) {
+            int b = Mathf.CeilToInt (bumpWidth);
+            for (int j=-b; j<=b; j++) {
+                for (int k=-b; k<=b; k++) {
                 
                     int x = tileX;
                     int z = tileZ;
@@ -176,8 +179,14 @@ public class generateMap : MonoBehaviour
                         }
                     } 
 
+                    if (landTiles [x, z] == null) {
+                        continue;
+                    }
+
                     float dY = Gaussian.GaussNorm (0, bumpWidth / 3.0f, j) * Gaussian.GaussNorm (0, bumpWidth / 3.0f, k) * bumpHeight;
                     dY += Random.value * bumpUniformNoise;
+
+                   
                     GameObject p = landTiles [x, z].GetComponent<generatePins> ().getPin (pinX + offsetX + j, pinZ + offsetZ + k);
                     //p.transform.localScale = p.transform.localScale + Vector3.up * dY;
                     p.transform.position = p.transform.position + Vector3.up * dY;

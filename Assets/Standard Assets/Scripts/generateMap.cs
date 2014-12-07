@@ -123,12 +123,12 @@ public class generateMap : MonoBehaviour
     void AddDunes ()
     // Add little dunes and dips and holes to the beach
     {        
-        float ZDirection = 0.15f + 0.35f * Random.value;
+        float ZDirection = 0.15f + 0.25f * Random.value;
         if (Random.value > 0.5f) {
             ZDirection *= -1;
         }
         int z0 = Random.Range (0, Mathf.RoundToInt (.15f * mapPins));
-        int zInterval = Mathf.RoundToInt (Random.Range (80, 120) / 100f * mapPins / (float)nDunes);
+        int zInterval = Mathf.Max (1, Mathf.RoundToInt (Random.Range (80, 120) / 100f * (float)mapPins / (float)nDunes));
         int pinX = 0;
         float xPhase = Random.value * 2 * Mathf.PI;        
 
@@ -150,6 +150,8 @@ public class generateMap : MonoBehaviour
             while (duneHeight <0.005f && duneHeight > -0.005f) {
                 duneHeight = Gaussian.Rand (0, maxDuneHeight / 3, 0, maxDuneHeight);
             }
+
+            print (string.Format ("Planting a dune at {0};{1}. Width {2}, height {3}, direction {4}, zInterval {5}", pinX, pinZ, duneWidth, duneHeight, ZDirection, zInterval));
 
             // for every tile along the ridge
             for (int i=0; i<duneLength; i++) {

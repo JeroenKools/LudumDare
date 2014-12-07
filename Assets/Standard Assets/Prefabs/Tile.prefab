@@ -39,7 +39,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3332645130add294c9850326f9ebc2c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pinsPerTile: 9
+  pinsPerTile: 6
   pinPrefab: {fileID: 100000, guid: 8d7514176c6819a4e9f6c37b4ad3b1b4, type: 2}
   gapRatio: 0
   slopeX: 0

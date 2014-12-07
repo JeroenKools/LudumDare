@@ -32,15 +32,17 @@ public class generatePins : MonoBehaviour
         gapWidth = dist * gapRatio;
         pinWidth = dist - gapWidth;
         
-        Vector3 pos = transform.position;
+        Vector3 pos = transform.position;        
 
         for (int x=0; x<pinsPerTile; x++) {
             for (int z=0; z<pinsPerTile; z++) {
+
+                float slope = pinPrefab.name == "WaterPin" ? 0 : TerrainManager.instance.slopeX / pinsPerTile * (float)x + 
+                    TerrainManager.instance.slopeZ / pinsPerTile * (float)z;
+
                 GameObject pin = (GameObject)Instantiate (pinPrefab, 
-                                                          new Vector3 (pos.x + x * dist + TerrainManager.instance.slopeX * x / pinsPerTile, 
-                                                                        pos.y, 
-                                                                        pos.z + dist * z + TerrainManager.instance.slopeZ * z / pinsPerTile),
-                                                          transform.rotation);
+                                    new Vector3 (pos.x + x * dist, pos.y + slope, pos.z + dist * z), 
+                                    transform.rotation);
                 pin.transform.localScale = new Vector3 (pinWidth, 3 * pinWidth, pinWidth);
                 
                 pin.name = "Pin " + x + ";" + z;

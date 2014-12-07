@@ -4,10 +4,6 @@ using System.Collections;
 public class followMouse : MonoBehaviour {
 	private int offsetX = 100;
 	private int offsetY = 0;
-	// Use this for initialization
-	void Start () {
-	
-	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {

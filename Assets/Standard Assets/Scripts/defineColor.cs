@@ -13,4 +13,9 @@ public class defineColor : MonoBehaviour
         c3 = new Color (Random.Range (c1.r, c2.r), Random.Range (c1.g, c2.g), Random.Range (c1.b, c2.b), Random.Range (c1.a, c2.a));
         renderer.material.color = c3;
     }
+
+    public Color getBaseColor ()
+    {
+        return c3;
+    }
 }

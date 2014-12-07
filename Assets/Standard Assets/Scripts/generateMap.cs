@@ -18,6 +18,8 @@ public class generateMap : MonoBehaviour
     public float maxWaveHeight;
     public float waveXLength;   // wavelength in pins    
     public float waveZLength;   // space between successive waves
+    public Color highWaveColor;
+    public float waterColorScale;
     
     private int _mapSize;
     private GameObject[,] waterTiles, landTiles;
@@ -75,6 +77,7 @@ public class generateMap : MonoBehaviour
     void Update ()
     {        
         PropagateWaves ();
+        ColorWaves ();
     }
 
 
@@ -221,6 +224,32 @@ public class generateMap : MonoBehaviour
     // Make the waves move towards the land and break
     {
 
+    }
+
+    void ColorWaves ()
+    {
+        if (!Application.isPlaying) {
+            return;
+        }
+
+        for (int z=0; z<mapPins; z++) {
+            bool exists = true;
+            for (int x=0; x<mapPins; x++) {
+                GameObject pin = getGlobalPin (x, z, waterTiles);
+                if (pin == null) {
+                    exists = false;
+                    break;
+                }
+                
+                float h = Mathf.Max (0, pin.transform.position.y * waterColorScale);
+                Color baseCol = pin.GetComponent<defineColor> ().getBaseColor ();
+                pin.renderer.material.color = baseCol + h * highWaveColor;
+            }
+            
+            if (!exists) {
+                break;
+            }
+        }
     }
 
     GameObject getGlobalPin (int x, int z, GameObject[,] from)

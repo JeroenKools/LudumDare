@@ -25,7 +25,7 @@ public class generateMap : MonoBehaviour
     private GameObject[,] waterTiles, landTiles;
     private GameObject waterTileHolder, landTileHolder;
     private float seafloorY;
-    private int pinsPerTile = 0;
+    private int pinsPerTile;
     private int nDunes;
     private int mapPins;
 
@@ -36,6 +36,7 @@ public class generateMap : MonoBehaviour
         } else {
             _mapSize = 5;
         }
+        pinsPerTile = tilePrefab.GetComponent<generatePins> ().pinsPerTile;
 
         nDunes = Mathf.RoundToInt (dunesPerTile * _mapSize * _mapSize);
         waterTiles = new GameObject[_mapSize, _mapSize];
@@ -60,8 +61,8 @@ public class generateMap : MonoBehaviour
         landTileHolder = new GameObject ("Land");
         landTileHolder.transform.parent = transform;        
 
-        Camera.main.transform.position = new Vector3 (-_mapSize / 2f, Mathf.Sqrt (2 * _mapSize * _mapSize), -_mapSize / 2f);
-        Camera.main.orthographicSize = _mapSize * 0.4f;        
+        Camera.main.transform.position = new Vector3 (-_mapSize / 2f, Mathf.Sqrt (2.0f * _mapSize * _mapSize), -_mapSize / 2.0f);
+        Camera.main.orthographicSize = 1 + _mapSize * 0.15f;
         Build ();
 
     }
@@ -77,7 +78,7 @@ public class generateMap : MonoBehaviour
     void Update ()
     {        
         PropagateWaves ();
-        ColorWaves ();
+        //ColorWaves ();
     }
 
 
@@ -92,13 +93,11 @@ public class generateMap : MonoBehaviour
                 
                 // Create land
                 location = new Vector3 (x, seafloorY + GameManager.instance.slopeX * x + GameManager.instance.slopeZ * z, z);
-                screenPos = Camera.main.WorldToViewportPoint (location);
-                // Only actually instantiate the tile if it would be on screen. This is in order to clip the points off of the diamond map.
+                screenPos = Camera.main.WorldToViewportPoint (location + getCorner (x, z));
+
+                // Only actually instantiate the tile if it would be on screen. This clips the corners off of the diamond map.
                 if (drawBound.Contains (screenPos)) {
-                    GameObject tile = (GameObject)Instantiate (tilePrefab, location, transform.rotation);
-                    if (pinsPerTile == 0) {
-                        pinsPerTile = tile.GetComponent<generatePins> ().pinsPerTile;
-                    }                    
+                    GameObject tile = (GameObject)Instantiate (tilePrefab, location, transform.rotation);          
                     tile.name = "Land tile " + x + ";" + z;
                     tile.transform.parent = landTileHolder.transform;
                     landTiles [x, z] = tile;
@@ -107,7 +106,7 @@ public class generateMap : MonoBehaviour
                 // Create water
                 if (z < landLimit + 2) {
                     location = new Vector3 (x, 0, z);
-                    screenPos = Camera.main.WorldToViewportPoint (location);
+                    screenPos = Camera.main.WorldToViewportPoint (location + getCorner (x, z));
                     if (drawBound.Contains (screenPos)) {
                         GameObject tile = (GameObject)Instantiate (waterTilePrefab, location, transform.rotation);
                         tile.name = "Water tile " + x + ";" + z;
@@ -118,6 +117,29 @@ public class generateMap : MonoBehaviour
             }
         } 
         mapPins = _mapSize * pinsPerTile;
+    }
+
+    Vector3 getCorner (int x, int z)
+    {
+        // return the corner (vector from center) that is closest to the edge of the map
+        Vector3 v = new Vector3 ();
+        Vector3 h = Vector3.up * GameManager.instance.pinHeight / (2 * pinsPerTile);
+        Vector3 r = Vector3.right / 2f;
+        Vector3 l = Vector3.left / 2f;
+        Vector3 f = Vector3.forward / 2f;
+        Vector3 b = Vector3.back / 2f;
+        float m = _mapSize / 2f;
+
+        if (x <= m && z <= m) {                     // bottom quadrant
+            v += h + r + f + 0.5f * Vector3.up;     // add extra height for potential dunes and waves
+        } else if (x > m && z <= m) {               // right
+            v += h + l + f;
+        } else if (x <= m && z > m) {               // left
+            v += h + r + b;
+        } else {                                    // top
+            v += -h + l + b;
+        }
+        return v;
     }
 
     void AddDunes ()
@@ -151,7 +173,7 @@ public class generateMap : MonoBehaviour
                 duneHeight = Gaussian.Rand (0, maxDuneHeight / 3, 0, maxDuneHeight);
             }
 
-            print (string.Format ("Planting a dune at {0};{1}. Width {2}, height {3}, direction {4}, zInterval {5}", pinX, pinZ, duneWidth, duneHeight, ZDirection, zInterval));
+            //print (string.Format ("Planting a dune at {0};{1}. Width {2}, height {3}, direction {4}, zInterval {5}", pinX, pinZ, duneWidth, duneHeight, ZDirection, zInterval));
 
             // for every tile along the ridge
             for (int i=0; i<duneLength; i++) {

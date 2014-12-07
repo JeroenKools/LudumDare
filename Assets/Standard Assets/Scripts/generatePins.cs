@@ -43,7 +43,7 @@ public class generatePins : MonoBehaviour
                 GameObject pin = (GameObject)Instantiate (pinPrefab, 
                                     new Vector3 (pos.x + x * dist, pos.y + slope, pos.z + dist * z), 
                                     transform.rotation);
-                pin.transform.localScale = new Vector3 (pinWidth, 3 * pinWidth, pinWidth);
+                pin.transform.localScale = new Vector3 (pinWidth, GameManager.instance.pinHeight * pinWidth, pinWidth);
                 
                 pin.name = "Pin " + x + ";" + z;
                 pin.transform.parent = pinHolder.transform;

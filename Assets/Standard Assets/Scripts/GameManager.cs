@@ -4,6 +4,7 @@ using System.Collections;
 public class GameManager : MonoBehaviour
 {
     public float slopeX, slopeZ;
+    public float pinHeight;
 
     private static GameManager _instance;
     public static GameManager instance {

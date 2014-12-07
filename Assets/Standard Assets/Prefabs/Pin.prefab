@@ -68,8 +68,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e9e0f6b67758f74ea385befff3004dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  c1: {r: .977941155, g: .86288923, b: .560878038, a: 0}
-  c2: {r: 1, g: .990872145, b: .669117689, a: 0}
+  c1: {r: .977941155, g: .81528151, b: .38830018, a: 0}
+  c2: {r: 1, g: .986612499, b: .514705896, a: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

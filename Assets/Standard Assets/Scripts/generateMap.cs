@@ -26,7 +26,10 @@ public class generateMap : MonoBehaviour
     private int pinsPerTile;
     private int nDunes;
     private int mapPins;
-
+    private float twoPi = Mathf.PI * 2;
+    private float timePassed = 0;
+    private float offsetX ;
+    private float offsetZ;
 
     void Start ()
     {
@@ -36,6 +39,8 @@ public class generateMap : MonoBehaviour
             _mapSize = 5;
         }
         pinsPerTile = tilePrefab.GetComponent<generatePins> ().pinsPerTile;
+        offsetX = twoPi * Random.value;
+        offsetZ = twoPi * Random.value;
 
         nDunes = Mathf.RoundToInt (dunesPerTile * _mapSize * _mapSize);
         waterTiles = new GameObject[_mapSize, _mapSize];
@@ -223,10 +228,6 @@ public class generateMap : MonoBehaviour
     void MakeWaves ()
         // Initialize the sea with small, standard waves
     {
-
-        float twoPi = Mathf.PI * 2;
-        float offsetX = twoPi * Random.value;
-        float offsetZ = twoPi * Random.value;
         
         for (int z=0; z<mapPins; z++) {
             for (int x=0; x<mapPins; x++) {
@@ -247,7 +248,19 @@ public class generateMap : MonoBehaviour
     void PropagateWaves ()
     // Make the waves move towards the land and break
     {
-
+        for (int z=0; z<mapPins; z++) {
+            for (int x=0; x<mapPins; x++) {
+                GameObject pin = getGlobalPin (x, z, waterTiles);
+                if (pin == null) {
+                    continue;
+                }
+                
+                float wx = 0;
+                float wz = 0;
+                float dY = 0;
+                pin.GetComponent<pinManager> ().changeHeight (dY);
+            }
+        }
     }
 
 

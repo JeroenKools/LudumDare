@@ -248,17 +248,19 @@ public class generateMap : MonoBehaviour
     void PropagateWaves ()
     // Make the waves move towards the land and break
     {
-        for (int z=0; z<mapPins; z++) {
-            for (int x=0; x<mapPins; x++) {
-                GameObject pin = getGlobalPin (x, z, waterTiles);
-                if (pin == null) {
-                    continue;
-                }
+        if (Application.isPlaying) {
+            for (int z=0; z<mapPins; z++) {
+                for (int x=0; x<mapPins; x++) {
+                    GameObject pin = getGlobalPin (x, z, waterTiles);
+                    if (pin == null) {
+                        continue;
+                    }
                 
-                float wx = 0;
-                float wz = 0;
-                float dY = 0;
-                pin.GetComponent<pinManager> ().changeHeight (dY);
+                    float wx = 0;
+                    float wz = 0;
+                    float dY = 0;
+                    pin.GetComponent<pinManager> ().changeHeight (dY);
+                }
             }
         }
     }
@@ -292,5 +294,11 @@ public class generateMap : MonoBehaviour
             }
             return p.getPin (pinX, pinZ);
         }
+    }
+
+    public void destroyTerrain ()
+    {
+        DestroyImmediate (GameObject.Find ("Water"));
+        DestroyImmediate (GameObject.Find ("Land"));
     }
 }

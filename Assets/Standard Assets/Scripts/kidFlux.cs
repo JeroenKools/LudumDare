@@ -19,10 +19,10 @@ public class kidFlux : MonoBehaviour {
 		InvokeRepeating ("Flux", delay, interval);
 	}
 
-	void Flux () {
+	public void SortKidsByActive() {
 		activeKids.Clear();
 		inactiveKids.Clear();
-
+		
 		for(int i = 0; i < kids.Length; i++){
 			if (kids[i].activeInHierarchy){
 				activeKids.Add(kids[i]);
@@ -30,6 +30,10 @@ public class kidFlux : MonoBehaviour {
 				inactiveKids.Add (kids[i]);
 			}
 		}
+	}
+
+	void Flux () {
+		SortKidsByActive ();
 
 		print ("A:" + activeKids.Count + " I:" + inactiveKids.Count);
 

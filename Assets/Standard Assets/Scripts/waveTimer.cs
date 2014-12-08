@@ -24,9 +24,15 @@ public class waveTimer : MonoBehaviour
 
     //pick a phrase and send it to delegatePhrases
 
-    void CreateWave ()
-    {
-        selectedPhrase = wavePhrases [randomPhrase];
-        GameObject.Find ("Notifications").GetComponent<notifications> ().phrases.Add (selectedPhrase);
+    void CreateWave () {
+		gameObject.GetComponent<kidFlux> ().SortKidsByActive ();
+		
+		if (gameObject.GetComponent<kidFlux> ().activeKids.Count > 0) {
+			string kidName = gameObject.GetComponent<kidFlux>().activeKids[Random.Range(0, gameObject.GetComponent<kidFlux> ().activeKids.Count)].GetComponent<kid>().kidName;
+			selectedPhrase = wavePhrases [randomPhrase];
+			GameObject.Find ("Notifications").GetComponent<notifications> ().phrases.Add (kidName + ": " + selectedPhrase);	
+		} else {
+			print("no kids - no wave text");
+		}
     }
 }

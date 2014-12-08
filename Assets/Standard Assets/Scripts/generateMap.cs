@@ -270,6 +270,15 @@ public class generateMap : MonoBehaviour
                     float wz = (-0.5f + Mathf.Sin (0.1f * (t + fz * -z)) + 0.5f * Mathf.Sin (0.67f * (t + fz * -z)) + 0.5f * Mathf.Sin (2.8f * (t + fz * -z)));
                     wz = wz * wz;
                     float y = (wx + wz) * maxWaveHeight;
+
+                    GameObject lastWaterPin = getGlobalPin (x, z - 1, waterTiles);
+                    GameObject lastLandPin = getGlobalPin (x, z - 1, landTiles);
+                    if (lastLandPin != null && lastLandPin != null) {
+                        if (lastLandPin.transform.position.y > lastWaterPin.transform.position.y) {
+                            y -= 0.08f;
+                        }
+                    }
+
                     pin.GetComponent<pinManager> ().setHeight (y);
                 }
             }

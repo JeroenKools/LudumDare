@@ -3370,7 +3370,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: pete just found 2 really cool shells
+  m_Text: '...'
 --- !u!222 &835663522
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5645,6 +5645,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 1377323762}
+  - 114: {fileID: 1377323763}
   m_Layer: 5
   m_Name: kid2
   m_TagString: Untagged
@@ -5671,6 +5672,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -100}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: .5, y: .5}
+--- !u!114 &1377323763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1377323761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca229ef37f5e85744bab991682cb0189, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kidName: 
+  kidDuty: 
 --- !u!1 &1383026078
 GameObject:
   m_ObjectHideFlags: 0
@@ -6127,6 +6141,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 1491190927}
+  - 114: {fileID: 1491190928}
   m_Layer: 5
   m_Name: kid1
   m_TagString: Untagged
@@ -6153,6 +6168,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: .5, y: .5}
+--- !u!114 &1491190928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1491190926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca229ef37f5e85744bab991682cb0189, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kidName: 
+  kidDuty: 
 --- !u!1 &1519725926
 GameObject:
   m_ObjectHideFlags: 0
@@ -6736,14 +6764,14 @@ MonoBehaviour:
   activatePhrases:
   - -mumbles-
   - can i help too?
-  - cool castle
+  - cool castle.
   - what are you building?
-  - hey
-  - i wanna help
-  - can i play
-  - what are you doing
-  - i'll help
-  - hello
+  - hey.
+  - i wanna help.
+  - can i play?
+  - what are you doing?
+  - i'll help.
+  - hello!
   deactivatePhrases:
   - -mumbles-
   - im gonna go dig a hole
@@ -6755,6 +6783,17 @@ MonoBehaviour:
   - bye
   - sandwiches!
   - will you be here later?
+  kidNames:
+  - Betty
+  - Jasper
+  - William
+  - Nathan
+  - Soliel
+  - Helen
+  - Jeroen
+  - Ben
+  - Jamie
+  - Audrey
   delay: 0
   interval: 10
 --- !u!1 &1760331581
@@ -7507,6 +7546,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 1899591297}
+  - 114: {fileID: 1899591298}
   m_Layer: 5
   m_Name: kid0
   m_TagString: Untagged
@@ -7533,6 +7573,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 100}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: .5, y: .5}
+--- !u!114 &1899591298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1899591296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca229ef37f5e85744bab991682cb0189, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kidName: 
+  kidDuty: 
 --- !u!1 &1933859897
 GameObject:
   m_ObjectHideFlags: 0

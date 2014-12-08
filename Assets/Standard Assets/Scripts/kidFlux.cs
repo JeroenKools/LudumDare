@@ -11,6 +11,7 @@ public class kidFlux : MonoBehaviour {
 	public Texture[] disks = new Texture[3];
 	public string[] activatePhrases = new string[10];
 	public string[] deactivatePhrases = new string[10];
+	public string[] kidNames = new string[10];
 	public int delay;
 	public int interval;
 	
@@ -46,10 +47,17 @@ public class kidFlux : MonoBehaviour {
 		int randomKid = Random.Range (0, inactiveKids.Count - 1);
 		string selectedPhrase = activatePhrases [Random.Range (0, activatePhrases.Length)];
 
+		//change color
 		inactiveKids [randomKid].transform.Find ("disk").GetComponent<RawImage> ().texture = disks [Random.Range (0, disks.Length)];
-		inactiveKids [randomKid].SetActive (true);
-		GameObject.Find("Notifications").GetComponent<notifications> ().phrases.Add (selectedPhrase);
 
+		//change kid's name
+		inactiveKids [randomKid].GetComponent<kid> ().kidName = kidNames [Random.Range (0, kidNames.Length)];
+
+		//add greeting to notifications
+		GameObject.Find("Notifications").GetComponent<notifications> ().phrases.Insert (0, inactiveKids[randomKid].GetComponent<kid>().kidName + ": " + selectedPhrase);
+
+		//activate kid
+		inactiveKids [randomKid].SetActive (true);
 	}
 
 	void removeKid(){
@@ -57,7 +65,10 @@ public class kidFlux : MonoBehaviour {
 		int randomKid = Random.Range (0, inactiveKids.Count - 1);
 		string selectedPhrase = deactivatePhrases [Random.Range (0, deactivatePhrases.Length)];
 
-		GameObject.Find("Notifications").GetComponent<notifications> ().phrases.Add (selectedPhrase);
+		//add farewell to notifications
+		GameObject.Find("Notifications").GetComponent<notifications> ().phrases.Insert (0, activeKids[randomKid].GetComponent<kid>().kidName + ": " + selectedPhrase);
+
+		//deactivate kid
 		activeKids [randomKid].SetActive (false);
 	}
 }

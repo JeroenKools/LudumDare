@@ -7337,6 +7337,13 @@ MonoBehaviour:
   - Audrey
   delay: 0
   interval: 10
+  hiClips:
+  - {fileID: 8300000, guid: e9cd0c459149446bcb3774c1d153ce5c, type: 3}
+  - {fileID: 8300000, guid: 8e7ec24c581df432e99903bcab9d0f9b, type: 3}
+  - {fileID: 8300000, guid: 22920a781edee40728718f8dec2613b9, type: 3}
+  byeClips:
+  - {fileID: 8300000, guid: 63a58ff1b917c4b6d9902006b642e72b, type: 3}
+  - {fileID: 8300000, guid: ddc88e4e849b54b4a8eb202548dd900c, type: 3}
 --- !u!1 &1760331581
 GameObject:
   m_ObjectHideFlags: 0

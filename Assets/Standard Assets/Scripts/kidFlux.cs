@@ -14,6 +14,8 @@ public class kidFlux : MonoBehaviour {
 	public string[] kidNames = new string[10];
 	public int delay;
 	public int interval;
+	public AudioClip[] hiClips = new AudioClip[3];
+	public AudioClip[] byeClips = new AudioClip[2];
 	
 	void Start () {
 		InvokeRepeating ("Flux", delay, interval);
@@ -65,6 +67,7 @@ public class kidFlux : MonoBehaviour {
 
 		//play sound
 		GameObject.Find ("Kid Sounds").GetComponent<AudioSource> ().Play ();
+		GameObject.Find ("Kid Sounds").GetComponent<AudioSource> ().PlayOneShot (hiClips[Random.Range(0, hiClips.Length)]);
 	}
 
 	void removeKid(){
@@ -77,5 +80,8 @@ public class kidFlux : MonoBehaviour {
 
 		//deactivate kid
 		activeKids [randomKid].SetActive (false);
+
+		//play sound
+		GameObject.Find ("Kid Sounds").GetComponent<AudioSource> ().PlayOneShot (byeClips[Random.Range(0, byeClips.Length)]);
 	}
 }

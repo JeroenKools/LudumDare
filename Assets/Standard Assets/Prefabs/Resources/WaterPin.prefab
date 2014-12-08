@@ -70,6 +70,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   c1: {r: .0196078438, g: .509803951, b: .529411793, a: .729411781}
   c2: {r: .249134913, g: .649182796, b: .705882311, a: .784313738}
+  highColor: {r: .729411781, g: .831372559, b: 1, a: 0}
+  heightScale: 6
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

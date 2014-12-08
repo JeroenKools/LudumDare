@@ -6677,7 +6677,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waveInterval: 10
   waitBeforeFirstWave: 0
-  manager: {fileID: 0}
   wavePhrases:
   - I think that wave is gonna hit us!
   - Watch out for that wave!

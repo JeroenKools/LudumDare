@@ -6729,6 +6729,32 @@ MonoBehaviour:
   - {fileID: 1377323761}
   activeKids: []
   inactiveKids: []
+  disks:
+  - {fileID: 2800000, guid: 6588d050a9d9a0d499803f96f5a2cf6b, type: 3}
+  - {fileID: 2800000, guid: 7289b517d6cab2f4b91c4a973fa485e1, type: 3}
+  - {fileID: 2800000, guid: b55f41f418554dc4cbcb1603d86bfec7, type: 3}
+  activatePhrases:
+  - -mumbles-
+  - can i help too?
+  - cool castle
+  - what are you building?
+  - hey
+  - i wanna help
+  - can i play
+  - what are you doing
+  - i'll help
+  - hello
+  deactivatePhrases:
+  - -mumbles-
+  - im gonna go dig a hole
+  - mom says no friends
+  - i am allergic to sand
+  - im gonna go now
+  - my mom is calling me
+  - i have to go
+  - bye
+  - sandwiches!
+  - will you be here later?
   delay: 0
   interval: 10
 --- !u!1 &1760331581

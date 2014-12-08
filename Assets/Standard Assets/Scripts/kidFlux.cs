@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
 public class kidFlux : MonoBehaviour {
 
 	public GameObject[] kids;
-	//public int numKidsPresent;
 	public List<GameObject> activeKids = new List<GameObject>();
 	public List<GameObject> inactiveKids = new List<GameObject>();
+	public Texture[] disks = new Texture[3];
+	public string[] activatePhrases = new string[10];
+	public string[] deactivatePhrases = new string[10];
 	public int delay;
 	public int interval;
 	
@@ -30,19 +33,31 @@ public class kidFlux : MonoBehaviour {
 		print ("A:" + activeKids.Count + " I:" + inactiveKids.Count);
 
 		if (gameObject.GetComponent<coolness> ().isCool && activeKids.Count < 3) {
-			addKid();
-		} else if(activeKids.Count > 0) {
-			removeKid();
+			addKid ();
+		} else if (activeKids.Count > 0) {
+			removeKid ();
+		} else {
+			print ("not cool enough");
 		}
 	}
 
 	void addKid(){
 		print ("add kid");
-		inactiveKids [Random.Range (0, inactiveKids.Count - 1)].SetActive (true);
+		int randomKid = Random.Range (0, inactiveKids.Count - 1);
+		string selectedPhrase = activatePhrases [Random.Range (0, activatePhrases.Length)];
+
+		inactiveKids [randomKid].transform.Find ("disk").GetComponent<RawImage> ().texture = disks [Random.Range (0, disks.Length)];
+		inactiveKids [randomKid].SetActive (true);
+		GameObject.Find("Notifications").GetComponent<notifications> ().phrases.Add (selectedPhrase);
+
 	}
 
 	void removeKid(){
 		print ("remove kid");
-		activeKids [Random.Range (0, activeKids.Count - 1)].SetActive (false);
+		int randomKid = Random.Range (0, inactiveKids.Count - 1);
+		string selectedPhrase = deactivatePhrases [Random.Range (0, deactivatePhrases.Length)];
+
+		GameObject.Find("Notifications").GetComponent<notifications> ().phrases.Add (selectedPhrase);
+		activeKids [randomKid].SetActive (false);
 	}
 }

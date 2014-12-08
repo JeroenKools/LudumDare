@@ -38,5 +38,19 @@ public class GameManager : MonoBehaviour
 		{
 				activeTool = t;
 		}
+		
+		void OnGUI ()
+		{
+				if (Input.GetMouseButtonDown (1)) {
+						// Right-click to deselect/cancel current tool
+						string[] deactivateObjects = {"menuBucket", "menuShovel", "menuChest",
+						"Cursor/backgroundBlue","Cursor/backgroundGreen", "Cursor/backgroundGold"};				
+						foreach (string s in deactivateObjects) {
+								if (GameObject.Find (s) != null) {
+										GameObject.Find (s).SetActive (false);
+								}
+						}
 	
+				}
+		}
 }

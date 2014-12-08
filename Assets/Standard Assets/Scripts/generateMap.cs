@@ -225,11 +225,15 @@ public class generateMap : MonoBehaviour
 								GameObject p = getGlobalPin (pinX + j, pinZ + k, tiles);
 								if (p != null) {       
 										float dY = Gaussian.GaussNorm (0, width / 3.0f, j) * Gaussian.GaussNorm (0, width / 3.0f, k) * height;                        
-										dY += Random.value * duneUniformNoise;                
+										dY += Random.value * duneUniformNoise;       
 										p.GetComponent<pinManager> ().changeHeight (dY);
 								}
 						}
 				}
+		}
+		
+		public void Smooth (int pinX, int pinZ, float width, float amount, GameObject[,] tiles)
+		{
 		}
     
     

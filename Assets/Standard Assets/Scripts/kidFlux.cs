@@ -62,6 +62,9 @@ public class kidFlux : MonoBehaviour {
 
 		//activate kid
 		inactiveKids [randomKid].SetActive (true);
+
+		//play sound
+		GameObject.Find ("Kid Sounds").GetComponent<AudioSource> ().Play ();
 	}
 
 	void removeKid(){

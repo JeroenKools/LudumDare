@@ -6607,8 +6607,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bbc556815b07c44398253e216aa4051, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapSize: 20
-  waterRatio: .25
+  mapSize: 16
+  waterRatio: .300000012
   tilePrefab: {fileID: 100000, guid: 65e8e00f5789dd942889121580071e4a, type: 2}
   waterTilePrefab: {fileID: 100000, guid: 3fd179b0fae49034e9cca076065d32de, type: 2}
   drawBound:
@@ -6617,15 +6617,15 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
-  dunesPerTile: .670000017
-  maxDuneHeight: .0500000007
+  dunesPerTile: .5
+  maxDuneHeight: .100000001
   minDuneWidth: 4
-  maxDuneWidth: 9
-  duneUniformNoise: .00499999989
+  maxDuneWidth: 12
+  duneUniformNoise: .00300000003
   minWaveHeight: .0299999993
-  maxWaveHeight: .100000001
-  waveXLength: 40
-  waveZLength: 24
+  maxWaveHeight: .0799999982
+  waveXLength: 20
+  waveZLength: 30
   wavePeriod: 0
 --- !u!114 &1731877974
 MonoBehaviour:
@@ -6703,7 +6703,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slopeX: 0
   slopeZ: .0799999982
-  pinHeight: 3
+  pinHeight: 5
+  clickDeltaY: .0500000007
 --- !u!4 &1756758582
 Transform:
   m_ObjectHideFlags: 0

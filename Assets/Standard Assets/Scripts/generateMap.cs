@@ -84,7 +84,9 @@ public class generateMap : MonoBehaviour
 
     void Update ()
     {        
-        PropagateWaves ();
+        if (Application.isPlaying) {
+            PropagateWaves ();
+        }
     }
 
 
@@ -110,7 +112,7 @@ public class generateMap : MonoBehaviour
                 }
                 
                 // Create water
-                if (z < landLimit + 2) {
+                if (z < landLimit + 4) {
                     location = new Vector3 (x, 0, z);
                     screenPos = Camera.main.WorldToViewportPoint (location + getCorner (x, z));
                     if (drawBound.Contains (screenPos)) {
@@ -158,7 +160,7 @@ public class generateMap : MonoBehaviour
     void AddDunes ()
     // Add little dunes and dips and holes to the beach
     {        
-        float ZDirection = 0.15f + 0.25f * Random.value;
+        float ZDirection = 0.05f + 0.3f * Random.value;
         if (Random.value > 0.5f) {
             ZDirection *= -1;
         }
@@ -190,8 +192,14 @@ public class generateMap : MonoBehaviour
 
             // for every tile along the ridge
             for (int i=0; i<duneLength; i++) {
-
-                PlacePile (pinX, pinZ, duneHeight, duneWidth, duneUniformNoise, landTiles);
+        
+                float dY;
+                if (pin == null) {
+                    dY = duneHeight;
+                } else {
+                    dY = duneHeight * (0.25f + 1.0f * pin.transform.position.z / _mapSize); // lower dunes near the water
+                }
+                PlacePile (pinX, pinZ, dY, duneWidth, duneUniformNoise, landTiles);
 
                 pinX++;
                 pinZ = Mathf.RoundToInt (startZ + (i + 1) * ZDirection);
@@ -206,21 +214,18 @@ public class generateMap : MonoBehaviour
     }
 
 
-    void PlacePile (int pinX, int pinZ, float height, float width, float noise, GameObject[,] tiles)
-    {
-        // Add a gaussian bump with some uniform noise
-
+    // Add a gaussian bump with some uniform noise
+    public void PlacePile (int pinX, int pinZ, float height, float width, float noise, GameObject[,] tiles)
+    {        
         int b = Mathf.CeilToInt (width);
         
         for (int j=-b; j<=b; j++) {
-            for (int k=-b; k<=b; k++) {
+            for (int k=-b; k<=b; k++) {                                  
                 
-                float dY = Gaussian.GaussNorm (0, width / 3.0f, j) * Gaussian.GaussNorm (0, width / 3.0f, k) * height;                        
-                dY += Random.value * duneUniformNoise;                        
-                
-                GameObject p = getGlobalPin (pinX + j, pinZ + k, landTiles);
-                if (p != null) {
-                    dY *= 0.333f + Mathf.Clamp (p.transform.position.y, 0, 067f); // lower dunes near the water
+                GameObject p = getGlobalPin (pinX + j, pinZ + k, tiles);
+                if (p != null) {       
+                    float dY = Gaussian.GaussNorm (0, width / 3.0f, j) * Gaussian.GaussNorm (0, width / 3.0f, k) * height;                        
+                    dY += Random.value * duneUniformNoise;                
                     p.GetComponent<pinManager> ().changeHeight (dY);
                 }
             }
@@ -228,10 +233,9 @@ public class generateMap : MonoBehaviour
     }
     
     
+    // Initialize the sea with small, standard waves
     void MakeWaves ()
-        // Initialize the sea with small, standard waves
-    {
-        
+    {        
         for (int z=0; z<mapPins; z++) {
             for (int x=0; x<mapPins; x++) {
                 GameObject pin = getGlobalPin (x, z, waterTiles);
@@ -256,33 +260,57 @@ public class generateMap : MonoBehaviour
         float fx = twoPi / waveXLength;
         float fz = twoPi / waveZLength;
 
-        if (Application.isPlaying) {
-            for (int z=0; z<mapPins; z++) {
-                for (int x=0; x<mapPins; x++) {
-                    GameObject pin = getGlobalPin (x, z, waterTiles);
-                    if (pin == null) {
-                        continue;
-                    }
-                
-                    // (sin(0.1*x)-.5+.5*sin(0.67*x)+.5*sin(2.8*x))^2
+        float[] absorbPower = new float[mapPins];
 
-                    float wx = Mathf.Sin (0.5f * fx * (x + z) + 0.1f * t);
-                    float wz = (-0.5f + Mathf.Sin (0.1f * (t + fz * -z)) + 0.5f * Mathf.Sin (0.67f * (t + fz * -z)) + 0.5f * Mathf.Sin (2.8f * (t + fz * -z)));
-                    wz = wz * wz;
-                    float y = (wx + wz) * maxWaveHeight;
 
-                    GameObject lastWaterPin = getGlobalPin (x, z - 1, waterTiles);
-                    GameObject lastLandPin = getGlobalPin (x, z - 1, landTiles);
-                    if (lastLandPin != null && lastLandPin != null) {
-                        if (lastLandPin.transform.position.y > lastWaterPin.transform.position.y) {
-                            y -= 0.08f;
-                        }
-                    }
+        for (int z=0; z<mapPins; z++) {
 
-                    pin.GetComponent<pinManager> ().setHeight (y);
+            for (int x=0; x<mapPins; x++) {
+                GameObject pin = getGlobalPin (x, z, landTiles);
+                if (pin != null) {
+                    absorbPower [x] += 0.05f * Mathf.Clamp (pin.transform.position.y, 0, 5);
+                }                
+            }
+
+            for (int x=0; x<mapPins; x++) {
+                GameObject pin = getGlobalPin (x, z, waterTiles);
+                if (pin == null) {
+                    continue;
                 }
+
+                float wx = Mathf.Sin (0.5f * fx * (x + z));
+                float wz = (-0.5f + 1.25f * Mathf.Sin (0.1f * (t + fz * -z)) + 0.5f * Mathf.Sin (0.67f * (t + fz * -z)) + 0.25f * Mathf.Sin (2.8f * (t + fz * -z)));
+                wz = wz * wz;
+                float y = (wx + wz) * maxWaveHeight;
+                if (z > waterRatio * 0.5f * mapPins) {
+                    y -= 0.002f * (z - waterRatio * 0.5f);  
+                }
+
+                GameObject landPin = getGlobalPin (x, z - 1, landTiles);                
+
+                if (landPin != null) {
+                    pinManager pinMan = landPin.GetComponent<pinManager> ();
+                    float diff = pin.transform.position.y - landPin.transform.position.y;                    
+                    
+                    // very shallow water gets soaked up
+//                    if (diff < 0.05f && diff > -0.25f) {
+//                        //PlacePile (x, z, (diff - 0.05f) * 0.5f, 2, 0, waterTiles);
+//                    }
+
+                    // land that's under water gets wet
+                    if (diff >= -0.08f) {  
+                        pinMan.setWetness (Mathf.Clamp01 (pinMan.wetness + 5 * (diff + 0.08f)));
+                        
+                    } // land that's not under water slowly dries up
+                    else if (diff < -0.08f && pinMan.wetness > 0) {   
+                        pinMan.setWetness (Mathf.Clamp01 (pinMan.wetness - 0.005f));
+                    }
+                }
+
+                pin.GetComponent<pinManager> ().setHeight (y - absorbPower [x]);
             }
         }
+        
     }
 
 
@@ -320,5 +348,14 @@ public class generateMap : MonoBehaviour
     {
         DestroyImmediate (GameObject.Find ("Water"));
         DestroyImmediate (GameObject.Find ("Land"));
+    }
+
+    public GameObject[,] tiles (bool land)
+    {
+        if (land) {
+            return landTiles;
+        } else {
+            return waterTiles;
+        }
     }
 }

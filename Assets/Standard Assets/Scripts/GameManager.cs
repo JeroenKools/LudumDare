@@ -5,6 +5,7 @@ public class GameManager : MonoBehaviour
 {
     public float slopeX, slopeZ;
     public float pinHeight;
+    public float clickDeltaY;
 
     private static GameManager _instance;
     public static GameManager instance {

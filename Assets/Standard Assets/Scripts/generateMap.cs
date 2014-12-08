@@ -18,6 +18,7 @@ public class generateMap : MonoBehaviour
     public float maxWaveHeight;
     public float waveXLength;   // wavelength in pins    
     public float waveZLength;   // space between successive waves
+    public float wavePeriod;    // in seconds
     
     private int _mapSize;
     private GameObject[,] waterTiles, landTiles;
@@ -75,7 +76,9 @@ public class generateMap : MonoBehaviour
     {
         CreateTerrain ();
         AddDunes (); 
-        MakeWaves ();
+        if (!Application.isPlaying) {
+            MakeWaves ();
+        }
     }
 	
 
@@ -248,6 +251,11 @@ public class generateMap : MonoBehaviour
     void PropagateWaves ()
     // Make the waves move towards the land and break
     {
+        timePassed += Time.deltaTime;
+        float t = timePassed;
+        float fx = twoPi / waveXLength;
+        float fz = twoPi / waveZLength;
+
         if (Application.isPlaying) {
             for (int z=0; z<mapPins; z++) {
                 for (int x=0; x<mapPins; x++) {
@@ -256,10 +264,13 @@ public class generateMap : MonoBehaviour
                         continue;
                     }
                 
-                    float wx = 0;
-                    float wz = 0;
-                    float dY = 0;
-                    pin.GetComponent<pinManager> ().changeHeight (dY);
+                    // (sin(0.1*x)-.5+.5*sin(0.67*x)+.5*sin(2.8*x))^2
+
+                    float wx = Mathf.Sin (0.5f * fx * (x + z) + 0.1f * t);
+                    float wz = (-0.5f + Mathf.Sin (0.1f * (t + fz * -z)) + 0.5f * Mathf.Sin (0.67f * (t + fz * -z)) + 0.5f * Mathf.Sin (2.8f * (t + fz * -z)));
+                    wz = wz * wz;
+                    float y = (wx + wz) * maxWaveHeight;
+                    pin.GetComponent<pinManager> ().setHeight (y);
                 }
             }
         }

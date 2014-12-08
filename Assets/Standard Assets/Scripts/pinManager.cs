@@ -31,6 +31,12 @@ public class pinManager : MonoBehaviour
         updateColor ();        
     }
 
+    public void setHeight (float y)
+    {
+        transform.position = new Vector3 (transform.position.x, y, transform.position.z);
+        updateColor ();        
+    }
+
 
     public void updateColor ()
     {

@@ -6613,6 +6613,7 @@ MonoBehaviour:
   maxWaveHeight: .100000001
   waveXLength: 40
   waveZLength: 24
+  wavePeriod: 0
 --- !u!114 &1731877974
 MonoBehaviour:
   m_ObjectHideFlags: 0

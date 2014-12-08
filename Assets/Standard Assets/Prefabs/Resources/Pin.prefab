@@ -68,8 +68,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e9e0f6b67758f74ea385befff3004dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  c1: {r: .977941155, g: .81528151, b: .38830018, a: 0}
-  c2: {r: 1, g: .986612499, b: .514705896, a: 0}
+  c1: {r: .720689654, g: .600818336, b: .286156207, a: 0}
+  c2: {r: .713793099, g: .704237223, b: .367393523, a: 0}
+  highColor: {r: .996078432, g: .990676999, b: .772819459, a: .501960814}
+  heightScale: .25
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

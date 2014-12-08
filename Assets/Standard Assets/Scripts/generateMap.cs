@@ -18,8 +18,6 @@ public class generateMap : MonoBehaviour
     public float maxWaveHeight;
     public float waveXLength;   // wavelength in pins    
     public float waveZLength;   // space between successive waves
-    public Color highWaveColor;
-    public float waterColorScale;
     
     private int _mapSize;
     private GameObject[,] waterTiles, landTiles;
@@ -28,6 +26,7 @@ public class generateMap : MonoBehaviour
     private int pinsPerTile;
     private int nDunes;
     private int mapPins;
+
 
     void Start ()
     {
@@ -78,7 +77,6 @@ public class generateMap : MonoBehaviour
     void Update ()
     {        
         PropagateWaves ();
-        //ColorWaves ();
     }
 
 
@@ -119,19 +117,22 @@ public class generateMap : MonoBehaviour
         mapPins = _mapSize * pinsPerTile;
     }
 
+
     Vector3 getCorner (int x, int z)
     {
         // return the corner (vector from center) that is closest to the edge of the map
+        float m = _mapSize / 2f;        
         Vector3 v = new Vector3 ();
-        Vector3 h = Vector3.up * GameManager.instance.pinHeight / (2 * pinsPerTile);
+
+        Vector3 h = Vector3.up * GameManager.instance.pinHeight / (2 * pinsPerTile);        
         Vector3 r = Vector3.right / 2f;
         Vector3 l = Vector3.left / 2f;
         Vector3 f = Vector3.forward / 2f;
         Vector3 b = Vector3.back / 2f;
-        float m = _mapSize / 2f;
+        
 
         if (x <= m && z <= m) {                     // bottom quadrant
-            v += h + r + f + 0.5f * Vector3.up;     // add extra height for potential dunes and waves
+            v += h + r + f;
         } else if (x > m && z <= m) {               // right
             v += h + l + f;
         } else if (x <= m && z > m) {               // left
@@ -139,8 +140,12 @@ public class generateMap : MonoBehaviour
         } else {                                    // top
             v += -h + l + b;
         }
+        
+        v += ((z + x) <= 1.5f * m) ? Vector3.up : new  Vector3 (); //Vector3.down;
+    
         return v;
     }
+
 
     void AddDunes ()
     // Add little dunes and dips and holes to the beach
@@ -208,7 +213,7 @@ public class generateMap : MonoBehaviour
                 GameObject p = getGlobalPin (pinX + j, pinZ + k, landTiles);
                 if (p != null) {
                     dY *= 0.333f + Mathf.Clamp (p.transform.position.y, 0, 067f); // lower dunes near the water
-                    p.transform.position = p.transform.position + Vector3.up * dY;
+                    p.GetComponent<pinManager> ().changeHeight (dY);
                 }
             }
         }
@@ -224,25 +229,20 @@ public class generateMap : MonoBehaviour
         float offsetZ = twoPi * Random.value;
         
         for (int z=0; z<mapPins; z++) {
-            bool exists = true;
             for (int x=0; x<mapPins; x++) {
                 GameObject pin = getGlobalPin (x, z, waterTiles);
                 if (pin == null) {
-                    exists = false;
-                    break;
+                    continue;
                 }
 
                 float wx = Mathf.Sin ((0.5f * x + z) / waveXLength * twoPi + offsetX);
                 float wz = Mathf.Cos (z / waveZLength * twoPi + offsetZ);
-                float y = (wx + wz) * minWaveHeight;
-                pin.transform.position = pin.transform.position + Vector3.up * y;
-            }
-
-            if (!exists) {
-                break;
+                float dY = (wx + wz) * minWaveHeight;
+                pin.GetComponent<pinManager> ().changeHeight (dY);
             }
         }
     }
+
 
     void PropagateWaves ()
     // Make the waves move towards the land and break
@@ -250,31 +250,6 @@ public class generateMap : MonoBehaviour
 
     }
 
-    void ColorWaves ()
-    {
-        if (!Application.isPlaying) {
-            return;
-        }
-
-        for (int z=0; z<mapPins; z++) {
-            bool exists = true;
-            for (int x=0; x<mapPins; x++) {
-                GameObject pin = getGlobalPin (x, z, waterTiles);
-                if (pin == null) {
-                    exists = false;
-                    break;
-                }
-                
-                float h = Mathf.Max (0, pin.transform.position.y * waterColorScale);
-                Color baseCol = pin.GetComponent<defineColor> ().getBaseColor ();
-                pin.renderer.material.color = baseCol + h * highWaveColor;
-            }
-            
-            if (!exists) {
-                break;
-            }
-        }
-    }
 
     GameObject getGlobalPin (int x, int z, GameObject[,] from)
     // Get a pin using global, nonstop coordinates.

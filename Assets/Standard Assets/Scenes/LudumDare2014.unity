@@ -576,7 +576,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: shell
+  m_Text: 
 --- !u!222 &99456711
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1024,7 +1024,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 230294047}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9aaa3f5f2d574f228e4a21aa38b61e4, type: 3}
   m_Name: 
@@ -1050,13 +1050,13 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 230294047}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 97b4768c3683045e4bfdb2e78272970c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   threshhold: .25
-  intensity: .75
+  intensity: .300000012
   blurSize: 1
   resolution: 0
   blurIterations: 1
@@ -1068,7 +1068,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 230294047}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b0923359e9e352a4b9b11c7b7161ad67, type: 3}
   m_Name: 
@@ -1233,7 +1233,7 @@ MonoBehaviour:
         m_MethodName: set_texture
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 2800000, guid: 6588d050a9d9a0d499803f96f5a2cf6b,
+          m_ObjectArgument: {fileID: 2800000, guid: 7289b517d6cab2f4b91c4a973fa485e1,
             type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Texture, UnityEngine, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
@@ -4750,6 +4750,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1756758587}
+        m_MethodName: PopulateMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1102288819
@@ -4929,7 +4941,7 @@ MonoBehaviour:
         m_MethodName: set_texture
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 2800000, guid: 6588d050a9d9a0d499803f96f5a2cf6b,
+          m_ObjectArgument: {fileID: 2800000, guid: b55f41f418554dc4cbcb1603d86bfec7,
             type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Texture, UnityEngine, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
@@ -5444,7 +5456,7 @@ MonoBehaviour:
         m_MethodName: set_texture
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 2800000, guid: 6588d050a9d9a0d499803f96f5a2cf6b,
+          m_ObjectArgument: {fileID: 2800000, guid: b55f41f418554dc4cbcb1603d86bfec7,
             type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Texture, UnityEngine, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
@@ -6265,7 +6277,7 @@ MonoBehaviour:
         m_MethodName: set_texture
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 2800000, guid: 6588d050a9d9a0d499803f96f5a2cf6b,
+          m_ObjectArgument: {fileID: 2800000, guid: 7289b517d6cab2f4b91c4a973fa485e1,
             type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Texture, UnityEngine, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
@@ -6496,7 +6508,7 @@ MonoBehaviour:
         m_MethodName: set_texture
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 2800000, guid: 6588d050a9d9a0d499803f96f5a2cf6b,
+          m_ObjectArgument: {fileID: 2800000, guid: 7289b517d6cab2f4b91c4a973fa485e1,
             type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Texture, UnityEngine, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null
@@ -7203,6 +7215,9 @@ GameObject:
   - 114: {fileID: 1756758583}
   - 114: {fileID: 1756758579}
   - 114: {fileID: 1756758584}
+  - 114: {fileID: 1756758585}
+  - 114: {fileID: 1756758586}
+  - 114: {fileID: 1756758587}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -7357,6 +7372,53 @@ MonoBehaviour:
   byeClips:
   - {fileID: 8300000, guid: 63a58ff1b917c4b6d9902006b642e72b, type: 3}
   - {fileID: 8300000, guid: ddc88e4e849b54b4a8eb202548dd900c, type: 3}
+--- !u!114 &1756758585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1756758578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625ba37226b8a4b4285db596155c654a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGonnaFind: 0
+  baseChance: 0
+  additionalChance: .25
+--- !u!114 &1756758586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1756758578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa691b216848f45cba230e52659042c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  delay: 0
+  interval: 10
+  findableStuff:
+  - shell
+  - feather
+  - stone
+--- !u!114 &1756758587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1756758578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08354f7a7b2994b6ab1ec68f650e68f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuSlots:
+  - {fileID: 99456707}
+  - {fileID: 1812789835}
+  - {fileID: 2123477171}
+  items: []
 --- !u!1 &1760331581
 GameObject:
   m_ObjectHideFlags: 0
@@ -7607,7 +7669,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: feather
+  m_Text: 
 --- !u!222 &1812789839
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9274,7 +9336,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: can
+  m_Text: 
 --- !u!222 &2123477175
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9431,7 +9493,7 @@ MonoBehaviour:
         m_MethodName: set_texture
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 2800000, guid: 6588d050a9d9a0d499803f96f5a2cf6b,
+          m_ObjectArgument: {fileID: 2800000, guid: b55f41f418554dc4cbcb1603d86bfec7,
             type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Texture, UnityEngine, Version=0.0.0.0,
             Culture=neutral, PublicKeyToken=null

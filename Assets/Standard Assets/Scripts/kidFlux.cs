@@ -37,8 +37,6 @@ public class kidFlux : MonoBehaviour {
 	void Flux () {
 		SortKidsByActive ();
 
-		print ("A:" + activeKids.Count + " I:" + inactiveKids.Count);
-
 		if (gameObject.GetComponent<coolness> ().isCool && activeKids.Count < 3) {
 			addKid ();
 		} else if (activeKids.Count > 0) {

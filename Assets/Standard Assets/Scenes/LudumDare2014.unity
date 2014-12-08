@@ -6635,6 +6635,7 @@ GameObject:
   - 114: {fileID: 1756758581}
   - 114: {fileID: 1756758580}
   - 114: {fileID: 1756758579}
+  - 114: {fileID: 1756758583}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -6654,9 +6655,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   kids:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1899591296}
+  - {fileID: 1491190926}
+  - {fileID: 1377323761}
   phrases: []
 --- !u!114 &1756758580
 MonoBehaviour:
@@ -6704,6 +6705,30 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
+--- !u!114 &1756758583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1756758578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ab3db7e083863d4d8cb02f785c57ca5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waitBeforeFirstFlavor: 0
+  flavorInterval: 2
+  flavorPhrases:
+  - -mumbles-
+  - I have school on Monday...
+  - We had a kite once.
+  - What are we building again?
+  - Can I be in charge?
+  - Is the beach old?
+  - I never saw the ocean before.
+  - Do you ever talk?
+  - I'm six and half.
+  - Do you guys live here?
 --- !u!1 &1760331581
 GameObject:
   m_ObjectHideFlags: 0

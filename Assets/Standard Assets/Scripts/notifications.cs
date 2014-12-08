@@ -14,8 +14,7 @@ public class notifications : MonoBehaviour {
 	}
 	
 	void Notify () {
-		if (phrases.Count > 0) { //and kid menus are not active!!!
-			//print (phrases[0]);
+		if (phrases.Count > 0) {
 			text.GetComponent<Text>().text = phrases[0];
 			phrases.RemoveAt(0);
 		}

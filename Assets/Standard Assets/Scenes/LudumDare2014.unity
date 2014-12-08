@@ -5651,7 +5651,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1377323762
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6133,7 +6133,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1491190927
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6621,6 +6621,8 @@ GameObject:
   - 114: {fileID: 1756758581}
   - 114: {fileID: 1756758580}
   - 114: {fileID: 1756758583}
+  - 114: {fileID: 1756758579}
+  - 114: {fileID: 1756758584}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -6628,6 +6630,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1756758579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1756758578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb10aa8b8fd733a438b4e4acb8ea219c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isCool: 0
+  percentCool: .5
 --- !u!114 &1756758580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6697,6 +6712,25 @@ MonoBehaviour:
   - Do you ever talk?
   - I'm six and half.
   - Do you guys live here?
+--- !u!114 &1756758584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1756758578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a1b21154e04dc4dbdb488cd57b63fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kids:
+  - {fileID: 1899591296}
+  - {fileID: 1491190926}
+  - {fileID: 1377323761}
+  activeKids: []
+  inactiveKids: []
+  delay: 0
+  interval: 10
 --- !u!1 &1760331581
 GameObject:
   m_ObjectHideFlags: 0
@@ -7453,7 +7487,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1899591297
 RectTransform:
   m_ObjectHideFlags: 0

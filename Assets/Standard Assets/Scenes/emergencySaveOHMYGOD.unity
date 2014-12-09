@@ -7766,12 +7766,12 @@ MonoBehaviour:
   minDuneWidth: 4
   maxDuneWidth: 12
   duneUniformNoise: .00300000003
-  minWaveHeight: .0299999993
-  maxWaveHeight: .0799999982
+  minWaveHeight: .0500000007
+  maxWaveHeight: .150000006
   waveXLength: 20
   waveZLength: 30
   wavePeriod: 0
-  smoothFactor: .400000006
+  smoothFactor: 2
 --- !u!114 &1731877974
 MonoBehaviour:
   m_ObjectHideFlags: 0

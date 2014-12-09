@@ -348,10 +348,10 @@ public class generateMap : MonoBehaviour
                     pinManager pinMan = landPin.GetComponent<pinManager> ();
                     float diff = pin.transform.position.y - landPin.transform.position.y;                    
 
-//                    if (diff > 0 && Random.value > 0.9) {
-//                        Smooth (x, z, smoothFactor, landTiles);
-//                        diff = pin.transform.position.y - landPin.transform.position.y;   
-//                    }                    
+                    if (diff > 0 && Random.value > 0.9) {
+                        Smooth (x, z, smoothFactor, landTiles);
+                        diff = pin.transform.position.y - landPin.transform.position.y;   
+                    }                    
 
                     // land that's under water gets wet
                     if (diff >= -0.08f) {  

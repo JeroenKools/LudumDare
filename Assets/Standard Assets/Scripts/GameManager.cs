@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class GameManager : MonoBehaviour
@@ -49,6 +50,10 @@ public class GameManager : MonoBehaviour
 								if (GameObject.Find (s) != null) {
 										GameObject.Find (s).SetActive (false);
 								}
+						}
+						GameObject cursorText = GameObject.Find ("Cursor/text");
+						if (cursorText != null) {
+								cursorText.GetComponent<Text> ().text = "";
 						}
 	
 				}

@@ -71,7 +71,10 @@ MonoBehaviour:
   c1: {r: .0196078438, g: .509803951, b: .529411793, a: .549019635}
   c2: {r: .249134913, g: .649182796, b: .705882311, a: .745098054}
   highColor: {r: .729411781, g: .831372559, b: 1, a: 0}
+  wetColor: {r: 0, g: 0, b: 0, a: 0}
   heightScale: 1
+  wetness: 0
+  maxHeight: 2
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

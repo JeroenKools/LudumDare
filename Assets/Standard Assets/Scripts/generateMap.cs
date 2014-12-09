@@ -76,6 +76,7 @@ public class generateMap : MonoBehaviour
     {
         CreateTerrain ();
         AddDunes (); 
+        PlaceFlag ();
         if (!Application.isPlaying) {
             MakeWaves ();
         }
@@ -125,6 +126,11 @@ public class generateMap : MonoBehaviour
             }
         } 
         mapPins = _mapSize * pinsPerTile;
+    }
+    
+    
+    public void PlaceFlag ()
+    {
     }
 
 

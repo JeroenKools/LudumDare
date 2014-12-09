@@ -256,7 +256,7 @@ public class generateMap : MonoBehaviour
                     float w = 0.16f / Mathf.Pow (2, d);
                     newY += w * posY;
                     float diff = oldY - posY;
-                    source.GetComponent<pinManager> ().changeHeight (0.1f * w * diff);
+                    source.GetComponent<pinManager> ().changeHeight (4.0f * w * diff);
                 }
             }
         }

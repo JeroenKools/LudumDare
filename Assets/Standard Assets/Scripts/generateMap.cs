@@ -19,6 +19,7 @@ public class generateMap : MonoBehaviour
     public float waveXLength;   // wavelength in pins    
     public float waveZLength;   // space between successive waves
     public float wavePeriod;    // in seconds
+    public float smoothFactor;
     
     private int _mapSize;
     private GameObject[,] waterTiles, landTiles;
@@ -147,6 +148,7 @@ public class generateMap : MonoBehaviour
         
         flag.name = "Flag";
         flag.transform.parent = p.transform;
+        flag.GetComponent<haveIlost> ().Set (x, z);
     }
 
 
@@ -278,7 +280,7 @@ public class generateMap : MonoBehaviour
                     float w = 0.16f / Mathf.Pow (2, d);
                     newY += w * posY;
                     float diff = oldY - posY;
-                    source.GetComponent<pinManager> ().changeHeight (4.0f * w * diff);
+                    source.GetComponent<pinManager> ().changeHeight (amount * w * diff);
                 }
             }
         }
@@ -346,17 +348,19 @@ public class generateMap : MonoBehaviour
                     pinManager pinMan = landPin.GetComponent<pinManager> ();
                     float diff = pin.transform.position.y - landPin.transform.position.y;                    
 
+//                    if (diff > 0 && Random.value > 0.9) {
+//                        Smooth (x, z, smoothFactor, landTiles);
+//                        diff = pin.transform.position.y - landPin.transform.position.y;   
+//                    }                    
+
                     // land that's under water gets wet
                     if (diff >= -0.08f) {  
-                        pinMan.setWetness (Mathf.Clamp01 (pinMan.wetness + 5 * (diff + 0.08f)));
+                        pinMan.setWetness (Mathf.Clamp01 (pinMan.wetness + 5.0f * (diff + 0.08f)));
                         
                     } // land that's not under water slowly dries up
-                    else if (diff < -0.10f && pinMan.wetness > 0) {   
+                    else if (diff < -0.08f && pinMan.wetness > 0) {   
                         pinMan.setWetness (Mathf.Clamp01 (pinMan.wetness - 0.005f));
-                    }
-                    if (diff > 0 && Random.value > 0.9) {
-                        Smooth (x, z, 0.8f, landTiles);
-                    }
+                    }                   
                 }
 
                 pin.GetComponent<pinManager> ().setHeight (y - absorbPower [x]);
@@ -366,7 +370,7 @@ public class generateMap : MonoBehaviour
     }
 
 
-    GameObject getGlobalPin (int x, int z, GameObject[,] from)
+    public GameObject getGlobalPin (int x, int z, GameObject[,] from)
     // Get a pin using global, nonstop coordinates.
     {
         int tileX = x / pinsPerTile;

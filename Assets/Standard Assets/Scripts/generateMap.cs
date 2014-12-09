@@ -269,10 +269,11 @@ public class generateMap : MonoBehaviour
         
         //print (string.Format ("current height is {0:F3}", target.GetComponent<pinManager> ().transform.position.y));
 
+        GameObject source = null;
         for (int j=-2; j<=2; j++) {
             for (int k=-2; k<=2; k++) {                                  
 																		
-                GameObject source = getGlobalPin (pinX + j, pinZ + k, tiles);
+                source = getGlobalPin (pinX + j, pinZ + k, tiles);
                 if (source != null) {       
                     float posY = source.GetComponent<pinManager> ().transform.position.y;
                     
@@ -280,9 +281,12 @@ public class generateMap : MonoBehaviour
                     float w = 0.16f / Mathf.Pow (2, d);
                     newY += w * posY;
                     float diff = oldY - posY;
-                    source.GetComponent<pinManager> ().changeHeight (amount * w * diff);
+                    source.GetComponent<pinManager> ().changeHeight (amount * w * diff, false);
                 }
             }
+        }
+        if (source != null) {
+            source.GetComponent<pinManager> ().updateColor ();
         }
         target.GetComponent<pinManager> ().setHeight (newY);
     }

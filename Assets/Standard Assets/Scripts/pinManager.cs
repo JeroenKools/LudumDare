@@ -28,11 +28,13 @@ public class pinManager : MonoBehaviour
     }
 
 
-    public void changeHeight (float deltaY)
+    public void changeHeight (float deltaY, bool updateTheColor = true)
     {
         float y = Mathf.Clamp (transform.position.y + deltaY, -maxHeight, maxHeight);
         transform.position = new Vector3 (transform.position.x, y, transform.position.z);
-        updateColor ();        
+        if (updateTheColor) {
+            updateColor ();
+        }
     }
 
     public void setHeight (float y)

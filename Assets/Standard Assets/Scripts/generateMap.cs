@@ -351,19 +351,21 @@ public class generateMap : MonoBehaviour
                 if (landPin != null) {
                     pinManager pinMan = landPin.GetComponent<pinManager> ();
                     float diff = pin.transform.position.y - landPin.transform.position.y;                    
+                    // negative: land is higher, positive: water is higher
 
+                    // land that's under water gets eroded
                     if (diff > 0 && Random.value > 0.9) {
                         Smooth (x, z, smoothFactor, landTiles);
                         diff = pin.transform.position.y - landPin.transform.position.y;   
                     }                    
 
-                    // land that's under water gets wet
+                    // land that's under or close to the water level gets wet
                     if (diff >= -0.08f) {  
                         pinMan.setWetness (Mathf.Clamp01 (pinMan.wetness + 5.0f * (diff + 0.08f)));
                         
-                    } // land that's not under water slowly dries up
+                    } // land that's sufficiently higher than the water slowly dries up
                     else if (diff < -0.08f && pinMan.wetness > 0) {   
-                        pinMan.setWetness (Mathf.Clamp01 (pinMan.wetness - 0.005f));
+                        pinMan.setWetness (Mathf.Clamp01 (pinMan.wetness + 0.08f * diff));
                     }                   
                 }
 

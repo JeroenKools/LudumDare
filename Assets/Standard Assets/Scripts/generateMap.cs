@@ -146,7 +146,7 @@ public class generateMap : MonoBehaviour
         flag.transform.Rotate (new Vector3 (0, Random.Range (120, 150), 0));
         
         flag.name = "Flag";
-        flag.transform.parent = GameObject.Find ("Game").transform;
+        flag.transform.parent = p.transform;
     }
 
 
@@ -265,7 +265,7 @@ public class generateMap : MonoBehaviour
         float oldY = target.GetComponent<pinManager> ().transform.position.y;
         float newY = 0;
         
-        print (string.Format ("current height is {0:F3}", target.GetComponent<pinManager> ().transform.position.y));
+        //print (string.Format ("current height is {0:F3}", target.GetComponent<pinManager> ().transform.position.y));
 
         for (int j=-2; j<=2; j++) {
             for (int k=-2; k<=2; k++) {                                  
@@ -353,6 +353,9 @@ public class generateMap : MonoBehaviour
                     } // land that's not under water slowly dries up
                     else if (diff < -0.10f && pinMan.wetness > 0) {   
                         pinMan.setWetness (Mathf.Clamp01 (pinMan.wetness - 0.005f));
+                    }
+                    if (diff > 0 && Random.value > 0.9) {
+                        Smooth (x, z, 0.8f, landTiles);
                     }
                 }
 

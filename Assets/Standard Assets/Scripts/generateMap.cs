@@ -62,6 +62,11 @@ public class generateMap : MonoBehaviour
         if (landTilesT != null) {
             DestroyImmediate (landTilesT.gameObject);
         }
+        
+        Transform flag = GameObject.Find ("Game").transform.FindChild ("Flag");
+        if (flag != null) {
+            DestroyImmediate (flag.gameObject);
+        }
 
         landTileHolder = new GameObject ("Land");
         landTileHolder.transform.parent = transform;        
@@ -131,6 +136,17 @@ public class generateMap : MonoBehaviour
     
     public void PlaceFlag ()
     {
+        int x = Random.Range ((int)(0.3 * mapPins), (int)(0.7 * mapPins));
+        int z = Random.Range ((int)(0.2 * mapPins), (int)(0.4 * mapPins));
+        GameObject p = getGlobalPin (x, z, landTiles);
+        PlacePile (x, z, 1, 6, 0, landTiles);
+        Vector3 pos = p.GetComponent<pinManager> ().transform.position;
+        
+        GameObject flag = (GameObject)Instantiate (Resources.Load ("Flag"), pos, transform.rotation);
+        flag.transform.Rotate (new Vector3 (0, Random.Range (120, 150), 0));
+        
+        flag.name = "Flag";
+        flag.transform.parent = GameObject.Find ("Game").transform;
     }
 
 

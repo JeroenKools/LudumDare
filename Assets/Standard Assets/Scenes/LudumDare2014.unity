@@ -1989,7 +1989,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Dump
+  m_Text: Pyramid
 --- !u!222 &381405283
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4550,7 +4550,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: place
+  m_Text: Cube
 --- !u!222 &1067248965
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8217,7 +8217,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Fill
+  m_Text: Cylinder
 --- !u!222 &1880070579
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -32,24 +32,51 @@ public class generateMap : MonoBehaviour
     private float timePassed = 0;
     private float offsetX ;
     private float offsetZ;
+    private float fx;
+    private float fz;
+    private GameObject escapeMnu, loseMnu;
 
+    public float[,] smoothFilter = {
+        {0,1,2,1,0},
+        {1,2,4,2,1},
+        {1,4,8,4,1},
+        {1,2,4,2,1},    
+        {0,1,2,1,0},
+    };
+
+    
     void Start ()
     {
+        // set the map size depending on whether you are in play or edit mode
         if (Application.isPlaying) {
             _mapSize = mapSize;
         } else {
             _mapSize = 5;
         }
+
+        // initialize a bunch of values
         pinsPerTile = tilePrefab.GetComponent<generatePins> ().pinsPerTile;
         offsetX = twoPi * Random.value;
         offsetZ = twoPi * Random.value;
-
         nDunes = Mathf.RoundToInt (dunesPerTile * _mapSize * _mapSize);
         waterTiles = new GameObject[_mapSize, _mapSize];
         landTiles = new GameObject[_mapSize, _mapSize];
         seafloorY = -(GameManager.instance.slopeZ + GameManager.instance.slopeX) * waterRatio * _mapSize;
-        
+        fx = twoPi / waveXLength;
+        fz = twoPi / waveZLength;
+        escapeMnu = GameObject.Find ("Canvas").transform.FindChild ("Escape Menu").gameObject;
+        loseMnu = GameObject.Find ("Canvas").transform.FindChild ("Lose Menu").gameObject;
 
+        // normalize the smoothing filter
+        float filterSum = 0;
+        foreach (float v in smoothFilter) {
+            filterSum += v;
+        }
+        for (int x = 0; x < smoothFilter.GetLength(0); x ++) {
+            for (int y = 0; y < smoothFilter.GetLength(1); y ++) {
+                smoothFilter [x, y] /= filterSum;
+            }
+        }
         // Delete existing water tiles
         Transform waterTilesT = transform.FindChild ("Water");
         if (waterTilesT != null) {
@@ -72,8 +99,9 @@ public class generateMap : MonoBehaviour
         landTileHolder = new GameObject ("Land");
         landTileHolder.transform.parent = transform;        
 
-        Camera.main.transform.position = new Vector3 (-_mapSize / 2f, Mathf.Sqrt (2.0f * _mapSize * _mapSize), -_mapSize / 2.0f);
-        Camera.main.orthographicSize = 1 + _mapSize * 0.15f;
+        //Camera.main.transform.position = new Vector3 (-_mapSize / 2f, Mathf.Sqrt (2.0f * _mapSize * _mapSize), -_mapSize / 2.0f);
+        Camera.main.transform.position = new Vector3 (0, _mapSize + 0.5f, 0);
+        Camera.main.orthographicSize = 0.65f + _mapSize * 0.19f;
         Build ();
 
     }
@@ -91,7 +119,7 @@ public class generateMap : MonoBehaviour
 
     void Update ()
     {        
-        if (Application.isPlaying) {
+        if (Application.isPlaying && !escapeMnu.activeInHierarchy & !loseMnu.activeSelf) {
             PropagateWaves ();
         }
     }
@@ -100,14 +128,14 @@ public class generateMap : MonoBehaviour
     void CreateTerrain ()
     {
         print (string.Format ("Generating {0}x{1} beach...", _mapSize, _mapSize));
-        float landLimit = _mapSize * waterRatio;
+        float landLimit = - seafloorY / GameManager.instance.slopeZ;
         Vector3 location, screenPos;
         
         for (int x=0; x<_mapSize; x++) {
             for (int z=0; z<_mapSize; z++) {
                 
                 // Create land
-                location = new Vector3 (x, seafloorY + GameManager.instance.slopeX * x + GameManager.instance.slopeZ * z, z);
+                location = new Vector3 (x, baseHeight (x, z), z);
                 screenPos = Camera.main.WorldToViewportPoint (location + getCorner (x, z));
 
                 // Only actually instantiate the tile if it would be on screen. This clips the corners off of the diamond map.
@@ -119,26 +147,40 @@ public class generateMap : MonoBehaviour
                 }
                 
                 // Create water
-                if (z < landLimit + 4) {
+                if (z < landLimit + 3) {
                     location = new Vector3 (x, 0, z);
                     screenPos = Camera.main.WorldToViewportPoint (location + getCorner (x, z));
-                    if (drawBound.Contains (screenPos)) {
+                    if (true) { //}drawBound.Contains (screenPos)) {
                         GameObject tile = (GameObject)Instantiate (waterTilePrefab, location, transform.rotation);
                         tile.name = "Water tile " + x + ";" + z;
                         tile.transform.parent = waterTileHolder.transform;
                         waterTiles [x, z] = tile;
                     }
                 }
+                
             }
         } 
         mapPins = _mapSize * pinsPerTile;
+    }
+
+
+    // returns the height of a land *tile* based on the beach's slope only, no dunes
+    public float baseHeight (float x, float z)
+    {
+        return seafloorY + GameManager.instance.slopeX * x + GameManager.instance.slopeZ * z;
+    }
+
+    // returns the height of a land *tile* based on the beach's slope only, no dunes
+    public float basePinHeight (float x, float z)
+    {
+        return baseHeight (x / pinsPerTile, z / pinsPerTile);
     }
     
     
     public void PlaceFlag ()
     {
         int x = Random.Range ((int)(0.3 * mapPins), (int)(0.7 * mapPins));
-        int z = Random.Range ((int)(0.2 * mapPins), (int)(0.4 * mapPins));
+        int z = Random.Range ((int)(0.25 * mapPins), (int)(0.4 * mapPins));
         GameObject p = getGlobalPin (x, z, landTiles);
         PlacePile (x, z, 1, 6, 0, landTiles);
         Vector3 pos = p.GetComponent<pinManager> ().transform.position;
@@ -148,7 +190,7 @@ public class generateMap : MonoBehaviour
         
         flag.name = "Flag";
         flag.transform.parent = p.transform;
-        flag.GetComponent<haveIlost> ().Set (x, z);
+        flag.GetComponent<haveIlost> ().Set (x, z);        
     }
 
 
@@ -255,6 +297,7 @@ public class generateMap : MonoBehaviour
             }
         }
     }
+
 		
     public void Smooth (int pinX, int pinZ, float amount, GameObject[,] tiles)
     {
@@ -277,18 +320,21 @@ public class generateMap : MonoBehaviour
                 if (source != null) {       
                     float posY = source.GetComponent<pinManager> ().transform.position.y;
                     
-                    int d = Mathf.Abs (j) + Mathf.Abs (k);
-                    float w = 0.16f / Mathf.Pow (2, d);
+                    float w = smoothFilter [j + 2, k + 2];
                     newY += w * posY;
                     float diff = oldY - posY;
-                    source.GetComponent<pinManager> ().changeHeight (amount * w * diff, false);
+                    if (diff < 0) {
+                        source.GetComponent<pinManager> ().changeHeight (amount * w * diff, false);
+                    }
                 }
             }
         }
         if (source != null) {
             source.GetComponent<pinManager> ().updateColor ();
         }
-        target.GetComponent<pinManager> ().setHeight (newY);
+        if (newY < oldY) {
+            target.GetComponent<pinManager> ().setHeight (newY);
+        }
     }
 	
 	
@@ -316,14 +362,12 @@ public class generateMap : MonoBehaviour
     {
         timePassed += Time.deltaTime;
         float t = timePassed;
-        float fx = twoPi / waveXLength;
-        float fz = twoPi / waveZLength;
-
         float[] absorbPower = new float[mapPins];
-
 
         for (int z=0; z<mapPins; z++) {
 
+            // find the sum of heights of the pins in this row (perpendicular to the beach)
+            // the more land a wave encounters, the more it gets absorbed
             for (int x=0; x<mapPins; x++) {
                 GameObject pin = getGlobalPin (x, z, landTiles);
                 if (pin != null) {
@@ -331,45 +375,59 @@ public class generateMap : MonoBehaviour
                 }                
             }
 
+            // calculate the wave height for each pin based mostly on a sum of sines of x,z and time
             for (int x=0; x<mapPins; x++) {
                 GameObject pin = getGlobalPin (x, z, waterTiles);
                 if (pin == null) {
                     continue;
                 }
 
-                float wx = Mathf.Sin (0.5f * fx * (x + z));
-                float wz = (-0.5f + 1.25f * Mathf.Sin (0.1f * (t + fz * -z)) + 0.5f * Mathf.Sin (0.67f * (t + fz * -z)) + 0.25f * Mathf.Sin (2.8f * (t + fz * -z)));
+                // Low frequency wave parallel to the beach
+                float wx = Mathf.Sin (0.5f * fx * (Mathf.Cos (t) + x + z));
+
+                // Compound sine wave perpendicular to the beach
+                float wz = (-0.5f + 
+                    1.25f * Mathf.Sin (0.1f * (t + fz * -z)) + 
+                    0.5f * Mathf.Sin (0.67f * (t + fz * -z)) + 
+                    0.25f * Mathf.Sin (2.8f * (t + fz * -z)) +
+                    2.0f * Mathf.Sin (0.01f * (t + fz * -z))); // killer wave!
                 //wz = wz * wz;
-                wz = Mathf.Abs (wz);
+                
                 float y = (wx + wz) * maxWaveHeight;
+
+                // Water level is lowered the further inland in gets
                 if (z > waterRatio * 0.5f * mapPins) {
-                    y -= 0.002f * (z - waterRatio * 0.5f);  
+                    y -= 0.003f * (z - waterRatio * 0.5f * mapPins);  
                 }
 
-                GameObject landPin = getGlobalPin (x, z - 1, landTiles);                
+                // Set height
+                pin.GetComponent<pinManager> ().setHeight (y - absorbPower [x]);
+
+                // Get matching land pin 
+                GameObject landPin = getGlobalPin (x, z, landTiles);                
 
                 if (landPin != null) {
                     pinManager pinMan = landPin.GetComponent<pinManager> ();
                     float diff = pin.transform.position.y - landPin.transform.position.y;                    
                     // negative: land is higher, positive: water is higher
 
-                    // land that's under water gets eroded
-                    if (diff > 0 && Random.value > 0.9) {
+                    // land that's in the surf gets eroded
+                    if (diff > 0 && diff < 0.1f && Random.value > 0.9) {
                         Smooth (x, z, smoothFactor, landTiles);
                         diff = pin.transform.position.y - landPin.transform.position.y;   
                     }                    
 
-                    // land that's under or close to the water level gets wet
+                    // land under or close to the water level gets wet
                     if (diff >= -0.08f) {  
                         pinMan.setWetness (Mathf.Clamp01 (pinMan.wetness + 5.0f * (diff + 0.08f)));
                         
-                    } // land that's sufficiently higher than the water slowly dries up
+                    } // land sufficiently higher than the water slowly dries up
                     else if (diff < -0.08f && pinMan.wetness > 0) {   
-                        pinMan.setWetness (Mathf.Clamp01 (pinMan.wetness + 0.08f * diff));
+                        pinMan.setWetness (Mathf.Clamp01 (pinMan.wetness + 0.06f * diff));
                     }                   
                 }
 
-                pin.GetComponent<pinManager> ().setHeight (y - absorbPower [x]);
+                
             }
         }
         
@@ -382,9 +440,6 @@ public class generateMap : MonoBehaviour
         int tileX = x / pinsPerTile;
         int tileZ = z / pinsPerTile;
 
-        int pinX = x % pinsPerTile;
-        int pinZ = z % pinsPerTile;
-
         if ((tileX < 0) || (tileX >= _mapSize) || (tileZ < 0) || (tileZ >= _mapSize)) {
             //print (string.Format ("Pin {0};{1} ({2}.{3};{4}.{5}) is off the map!", x, z, tileX, pinX, tileZ, pinZ));
             return null;
@@ -396,7 +451,7 @@ public class generateMap : MonoBehaviour
             }
         } catch (System.NullReferenceException) {
             print (string.Format ("getGlobalPin({0},{1}) tried to access tile {2},{3} but that doesn't exist!",
-                x, z, tileX, tileZ));
+                                  x, z, tileX, tileZ));
             return null;
         }
 
@@ -405,6 +460,8 @@ public class generateMap : MonoBehaviour
         if (p == null) {
             return null;
         } else {
+            int pinX = x % pinsPerTile;
+            int pinZ = z % pinsPerTile;
             if (pinX < 0 || pinX >= pinsPerTile || pinZ < 0 || pinZ >= pinsPerTile) {
                 return null;
             }
@@ -412,11 +469,13 @@ public class generateMap : MonoBehaviour
         }
     }
 
+
     public void destroyTerrain ()
     {
         DestroyImmediate (GameObject.Find ("Water"));
         DestroyImmediate (GameObject.Find ("Land"));
     }
+
 
     public GameObject[,] tiles (bool land)
     {

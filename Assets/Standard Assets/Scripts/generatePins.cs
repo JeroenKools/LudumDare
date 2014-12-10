@@ -7,7 +7,6 @@ public class generatePins : MonoBehaviour
     public int pinsPerTile;    
     public GameObject pinPrefab;
     public float gapRatio;
-    public float slopeX, slopeZ;
 
     private GameObject pinHolder;
     private GameObject[,] pins;
@@ -43,7 +42,7 @@ public class generatePins : MonoBehaviour
                     GameManager.instance.slopeZ / pinsPerTile * (float)z;
 
                 GameObject pin = (GameObject)Instantiate (pinPrefab, 
-                                                          new Vector3 (pos.x + x * dist, 2 * pos.y + slope, pos.z + dist * z), 
+                                    new Vector3 (pos.x + x * dist, 2 * pos.y + slope, pos.z + dist * z), 
                                     transform.rotation);                
                 pin.transform.localScale = new Vector3 (pinWidth, GameManager.instance.pinHeight * pinWidth, pinWidth);
                 

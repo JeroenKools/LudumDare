@@ -12,7 +12,7 @@ PlayerSettings:
   accelerometerFrequency: 60
   companyName: Benjero Rools
   productName: Pail & Shovel
-  defaultCursor: {fileID: 0}
+  defaultCursor: {fileID: 2800000, guid: 5d9b4d00d23042641b6e60e3b4e1e184, type: 3}
   cursorHotspot: {x: 0, y: 0}
   defaultScreenWidth: 1024
   defaultScreenHeight: 768
@@ -44,17 +44,17 @@ PlayerSettings:
   enableHWStatistics: 1
   usePlayerLog: 1
   stripPhysics: 0
-  forceSingleInstance: 0
+  forceSingleInstance: 1
   resizableWindow: 0
   useMacAppStoreValidation: 0
-  gpuSkinning: 0
+  gpuSkinning: 1
   xboxPIXTextureCapture: 0
   xboxEnableAvatar: 0
   xboxEnableKinect: 0
   xboxEnableKinectAutoTracking: 0
   xboxEnableFitness: 0
   visibleInBackground: 0
-  macFullscreenMode: 2
+  macFullscreenMode: 1
   d3d9FullscreenMode: 1
   d3d11ForceExclusiveMode: 0
   xboxSpeechDB: 0
@@ -105,14 +105,31 @@ PlayerSettings:
   AndroidSplashScreenScale: 0
   AndroidKeystoreName: 
   AndroidKeyaliasName: 
-  resolutionDialogBanner: {fileID: 0}
+  resolutionDialogBanner: {fileID: 2800000, guid: 801fd2a1abc3c5d41abb2161db38864e,
+    type: 3}
   m_BuildTargetIcons:
   - m_BuildTarget: 
     m_Icons:
-    - m_Icon: {fileID: 0}
+    - m_Icon: {fileID: 2800000, guid: 801fd2a1abc3c5d41abb2161db38864e, type: 3}
       m_Size: 128
+  - m_BuildTarget: Standalone
+    m_Icons:
+    - m_Icon: {fileID: 2800000, guid: 801fd2a1abc3c5d41abb2161db38864e, type: 3}
+      m_Size: 1024
+    - m_Icon: {fileID: 2800000, guid: 801fd2a1abc3c5d41abb2161db38864e, type: 3}
+      m_Size: 512
+    - m_Icon: {fileID: 2800000, guid: 801fd2a1abc3c5d41abb2161db38864e, type: 3}
+      m_Size: 256
+    - m_Icon: {fileID: 2800000, guid: 801fd2a1abc3c5d41abb2161db38864e, type: 3}
+      m_Size: 128
+    - m_Icon: {fileID: 2800000, guid: 801fd2a1abc3c5d41abb2161db38864e, type: 3}
+      m_Size: 48
+    - m_Icon: {fileID: 2800000, guid: 801fd2a1abc3c5d41abb2161db38864e, type: 3}
+      m_Size: 32
+    - m_Icon: {fileID: 2800000, guid: 801fd2a1abc3c5d41abb2161db38864e, type: 3}
+      m_Size: 16
   m_BuildTargetBatching: []
-  webPlayerTemplate: APPLICATION:Default
+  webPlayerTemplate: APPLICATION:Black Background
   m_TemplateCustomTags: {}
   XboxTitleId: 
   XboxImageXexPath: 

@@ -18,7 +18,6 @@ public class escapeMenu : MonoBehaviour {
 	}
 
 	void ExitApplication(){
-		print ("QUITTT");
 		Application.Quit ();
 	}
 }

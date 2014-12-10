@@ -39,6 +39,5 @@ public class haveIlost : MonoBehaviour
     {
         
         GameObject.Find ("Canvas").transform.Find ("Lose Menu").gameObject.SetActive (true);
-        Application.LoadLevel (Application.loadedLevel);
     }
 }
